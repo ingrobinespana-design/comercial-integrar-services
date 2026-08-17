@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Acta de Inspección — Comercial Integrar Services</title>
+<style>
+  :root {
+    --gold: #C9A14A;
+    --gold-light: #F5EDD6;
+    --gold-border: #E8DCB8;
+    --black: #0A0A0A;
+    --dark: #1A1A1A;
+    --gray: #555;
+    --lgray: #F4F4F4;
+    --mgray: #CCCCCC;
+    --white: #FFFFFF;
+    --red: #C0392B;
+    --green: #27AE60;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: #EFEFEF;
+    color: var(--dark);
+    font-size: 14px;
+    padding-bottom: 80px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--black);
+    padding: 0;
+    display: flex;
+    border-bottom: 4px solid var(--gold);
+  }
+  .header-left {
+    flex: 1;
+    padding: 16px 20px;
+  }
+  .brand { color: var(--gold); font-size: 16px; font-weight: 800; letter-spacing: 1px; }
+  .brand-sub { color: #888; font-size: 11px; margin-top: 2px; }
+  .header-right {
+    background: var(--gold);
+    padding: 14px 18px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 130px;
+  }
+  .header-right span { font-size: 12px; font-weight: 800; color: var(--black); line-height: 1.3; }
+
+  /* ── TIPO DE ACTA ── */
+  .tipo-bar {
+    background: var(--white);
+    border-bottom: 1px solid var(--mgray);
+    padding: 12px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .tipo-label { font-weight: 700; font-size: 13px; color: var(--black); }
+  .tipo-options { display: flex; gap: 8px; flex: 1; }
+  .tipo-btn {
+    flex: 1;
+    padding: 10px 8px;
+    border: 2px solid var(--mgray);
+    border-radius: 6px;
+    background: var(--lgray);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    color: var(--gray);
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .tipo-btn.active-entrega { border-color: var(--green); background: #EAF7EE; color: var(--green); }
+  .tipo-btn.active-devolucion { border-color: var(--red); background: #FDEEEC; color: var(--red); }
+
+  /* ── PÁGINA ── */
+  .page { max-width: 680px; margin: 0 auto; padding: 0 12px; }
+
+  /* ── SECCIÓN ── */
+  .section {
+    background: var(--white);
+    border-radius: 8px;
+    margin-top: 14px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .section-title {
+    background: var(--black);
+    color: var(--gold);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    padding: 10px 16px;
+    text-transform: uppercase;
+  }
+
+  /* ── CAMPOS ── */
+  .field-row {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #F0F0F0;
+    min-height: 44px;
+  }
+  .field-row:last-child { border-bottom: none; }
+  .field-label {
+    width: 130px;
+    min-width: 130px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gray);
+    padding: 10px 12px;
+    background: var(--lgray);
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    border-right: 1px solid #E8E8E8;
+  }
+  .field-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 10px 12px;
+    font-size: 16px;
+    -webkit-appearance: none;
+    color: var(--dark);
+    background: transparent;
+    width: 100%;
+  }
+  .field-input:focus { background: #FFFBF0; }
+  .field-fixed {
+    flex: 1;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  /* Combustible especial */
+  .fuel-row {
+    display: flex;
+    gap: 6px;
+    padding: 8px 12px;
+    flex-wrap: wrap;
+    flex: 1;
+  }
+  .fuel-btn {
+    padding: 6px 12px;
+    border: 1.5px solid var(--mgray);
+    border-radius: 20px;
+    background: var(--lgray);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--gray);
+    transition: all 0.15s;
+  }
+  .fuel-btn.active { border-color: var(--gold); background: var(--gold-light); color: #7A5800; }
+
+  /* ── INSPECCIÓN ── */
+  .inspect-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background: var(--dark);
+    padding: 8px 12px;
+    gap: 2px;
+  }
+  .inspect-header span { color: var(--gold); font-size: 11px; font-weight: 800; text-align: center; width: 44px; min-width: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .inspect-header span:first-child { flex: 1; width: auto; min-width: auto; justify-content: flex-start; }
+
+
+  .zone-header {
+    background: var(--gold);
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--black);
+    letter-spacing: 0.5px;
+  }
+
+  .inspect-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid #F0F0F0;
+    min-height: 42px;
+    gap: 2px;
+    padding: 0 12px;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .inspect-row:last-child { border-bottom: none; }
+  .inspect-row:hover { background: #FAFAFA; }
+  .inspect-row.has-damage { background: #FEF3F2; }
+  .inspect-row.is-na { background: #F7F7F7; opacity: 0.7; }
+
+  .item-name {
+    font-size: 12.5px;
+    color: var(--dark);
+    padding: 8px 0;
+    line-height: 1.3;
+    flex: 1;
+  }
+
+  .check-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 44px;
+    min-width: 44px;
+    flex-shrink: 0;
+  }
+
+  .check-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--mgray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: transparent;
+    background: var(--lgray);
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .check-circle.B { border-color: var(--green); background: #EAF7EE; color: var(--green); }
+  .check-circle.R { border-color: #E67E22; background: #FEF5EB; color: #E67E22; }
+  .check-circle.M { border-color: var(--red); background: #FDEEEC; color: var(--red); }
+  .check-circle.NA { border-color: #999; background: #F0F0F0; color: #666; font-size:10px; }
+
+  /* Obs expandible */
+  .obs-row {
+    display: none;
+    padding: 4px 12px 10px 12px;
+    border-bottom: 1px solid #F0F0F0;
+    background: #FFFBF0;
+  }
+  .obs-row.visible { display: flex; gap: 8px; align-items: center; }
+  .obs-input {
+    flex: 1;
+    border: 1px solid var(--gold-border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 12px;
+    color: var(--dark);
+    background: var(--white);
+    outline: none;
+  }
+  .obs-input:focus { border-color: var(--gold); }
+
+  /* ── OBSERVACIONES GENERALES ── */
+  .obs-general {
+    width: 100%;
+    min-height: 100px;
+    border: none;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--dark);
+    resize: vertical;
+    outline: none;
+    font-family: inherit;
+    background: transparent;
+  }
+  .obs-general:focus { background: #FFFBF0; }
+
+  /* ── FIRMAS ── */
+  .firmas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: #F0F0F0;
+  }
+  .firma-box {
+    background: var(--white);
+    padding: 16px;
+  }
+  .firma-title { color: var(--gold); font-size: 11px; font-weight: 800; letter-spacing: 1px; margin-bottom: 12px; }
+  .firma-line {
+    border-bottom: 1.5px solid var(--mgray);
+    height: 48px;
+    margin-bottom: 8px;
+  }
+  .firma-detail { font-size: 11px; color: var(--gray); line-height: 1.7; }
+  .firma-detail strong { color: var(--dark); }
+
+  /* ── FOOTER FIJO ── */
+  .sticky-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--black);
+    padding: 10px 16px;
+    display: flex;
+    gap: 10px;
+    border-top: 3px solid var(--gold);
+    z-index: 100;
+  }
+  .btn-print {
+    flex: 1;
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+  }
+  .btn-print:active { opacity: 0.8; }
+  .btn-clear {
+    background: transparent;
+    color: var(--mgray);
+    border: 1.5px solid #333;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* ── LEYENDA ── */
+  .leyenda {
+    display: flex;
+    gap: 14px;
+    padding: 10px 16px;
+    background: var(--lgray);
+    font-size: 11.5px;
+    color: var(--gray);
+    flex-wrap: wrap;
+  }
+  .ley-item { display: flex; align-items: center; gap: 5px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-b { background: var(--green); }
+  .dot-r { background: #E67E22; }
+  .dot-m { background: var(--red); }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: white; padding-bottom: 0; font-size: 11px; }
+    .sticky-footer { display: none; }
+    .tipo-bar { break-inside: avoid; }
+    .section { box-shadow: none; border: 1px solid #DDD; break-inside: avoid; }
+    .check-circle { border-width: 1.5px; }
+    .obs-row.visible { background: #FFFDF0; }
+    .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .zone-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .inspect-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .section-title { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .field-label { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .firma-box { break-inside: avoid; }
+  }
+
+  @media (max-width: 480px) {
+    .field-label { width: 110px; min-width: 110px; font-size: 11px; }
+    .field-fixed { font-size: 12px; }
+    .item-name { font-size: 12px; }
+    .firmas-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="brand">COMERCIAL INTEGRAR SERVICES</div>
+    <div class="brand-sub">Mat. Mercantil No. 0000066552 — Orito, Putumayo</div>
+  </div>
+  <div class="header-right">
+    <span>ACTA DE<br>INSPECCIÓN<br>ENTREGA / DEV.</span>
+  </div>
+</div>
+
+<!-- TIPO DE ACTA -->
+<div class="tipo-bar">
+  <span class="tipo-label">Tipo de acta:</span>
+  <div class="tipo-options">
+    <div class="tipo-btn" id="btn-entrega" onclick="setTipo('entrega')">✓ ENTREGA</div>
+    <div class="tipo-btn" id="btn-devolucion" onclick="setTipo('devolucion')">↩ DEVOLUCIÓN</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- 1. DATOS GENERALES -->
+  <div class="section">
+    <div class="section-title">1. Datos Generales</div>
+    <div class="field-row">
+      <div class="field-label">No. Contrato</div>
+      <input class="field-input" type="text" id="f-num" placeholder="Ej: 001-2026">
+    </div>
+    <div class="field-row">
+      <div class="field-label">Fecha y hora</div>
+      <input class="field-input" type="datetime-local" id="fecha-hora">
+    </div>
+    <div class="field-row">
+      <div class="field-label">Lugar</div>
+      <input class="field-input" type="text" id="f-lugar" placeholder="Lugar de entrega / devolución">
+    </div>
+    <div class="field-row">
+      <div class="field-label">Arrendatario</div>
+      <input class="field-input" type="text" id="f-nombre" placeholder="Nombre completo">
+    </div>
+    <div class="field-row">
+      <div class="field-label">C.C. / NIT</div>
+      <input class="field-input" type="text" id="f-cc" placeholder="Número de identificación">
+    </div>
+    <div class="field-row">
+      <div class="field-label">Teléfono</div>
+      <input class="field-input" type="tel" id="f-cel" placeholder="Celular">
+    </div>
+  </div>
+
+  <!-- 2. VEHÍCULO -->
+  <div class="section">
+    <div class="section-title">2. Identificación del Vehículo</div>
+    <div class="field-row">
+      <div class="field-label">Placa</div>
+      <div class="field-fixed">FZP501</div>
+    </div>
+    <div class="field-row">
+      <div class="field-label">Marca / Línea</div>
+      <div class="field-fixed">MITSUBISHI Montero Sport 3.0</div>
+    </div>
+    <div class="field-row">
+      <div class="field-label">Modelo / Color</div>
+      <div class="field-fixed">2020 — Gris Titanio</div>
+    </div>
+    <div class="field-row">
+      <div class="field-label">Blindaje</div>
+      <div class="field-fixed">E-II (Nivel II Plus) — Neosecurity</div>
+    </div>
+    <div class="field-row">
+      <div class="field-label">SOAT vence</div>
+      <input class="field-input" type="text" id="f-soat" placeholder="Fecha vencimiento SOAT">
+    </div>
+    <div class="field-row">
+      <div class="field-label">Km odómetro</div>
+      <input class="field-input" type="number" id="f-km" placeholder="Ej: 183250">
+    </div>
+    <div class="field-row">
+      <div class="field-label">Combustible</div>
+      <div class="fuel-row" id="fuel">
+        <div class="fuel-btn" onclick="setFuel(this,'Lleno')">Lleno</div>
+        <div class="fuel-btn" onclick="setFuel(this,'3/4')">3/4</div>
+        <div class="fuel-btn" onclick="setFuel(this,'1/2')">1/2</div>
+        <div class="fuel-btn" onclick="setFuel(this,'1/4')">1/4</div>
+        <div class="fuel-btn" onclick="setFuel(this,'Vacío')">Vacío</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. INSPECCIÓN -->
+  <div class="section">
+    <div class="section-title">3. Inspección Visual del Vehículo</div>
+    <div class="leyenda">
+      <div class="ley-item"><div class="dot dot-b"></div> B = Bueno</div>
+      <div class="ley-item"><div class="dot dot-r"></div> R = Regular</div>
+      <div class="ley-item"><div class="dot dot-m"></div> M = Malo/Daño</div>
+      <span style="color:#AAA;font-size:11px">Toca M para agregar observación</span>
+    </div>
+
+    <div class="inspect-header">
+      <span>ZONA / COMPONENTE</span>
+      <span>B</span><span>R</span><span>M</span><span>N/A</span>
+    </div>
+
+    <!-- EXTERIOR -->
+    <div class="zone-header">EXTERIOR</div>
+    <div id="items"></div>
+  </div>
+
+  <!-- 4. OBSERVACIONES GENERALES -->
+  <div class="section">
+    <div class="section-title">4. Observaciones Generales</div>
+    <textarea class="obs-general" placeholder="Anota aquí cualquier observación adicional que no esté en el checklist..."></textarea>
+  </div>
+
+  <!-- 5. DECLARACIÓN Y FIRMAS -->
+  <div class="section">
+    <div class="section-title">5. Declaración de Conformidad y Firmas</div>
+    <div style="padding:12px 16px; font-size:12px; color:var(--gray); line-height:1.6; border-bottom:1px solid #F0F0F0;">
+      Las partes declaran haber inspeccionado el vehículo conjuntamente y que este documento refleja su estado real. Cualquier daño no registrado se entenderá ocurrido durante el período de arrendamiento y será responsabilidad del Arrendatario.
+    </div>
+    <div class="firmas-grid">
+      <div class="firma-box">
+        <div class="firma-title">EL ARRENDADOR</div>
+        <div class="firma-line"></div>
+        <div class="firma-detail">
+          <strong>COMERCIAL INTEGRAR SERVICES</strong><br>
+          ESPAÑA RUALES DARWIN ROBIN<br>
+          C.C. 1.061.733.315-3<br>
+          Propietario / Rep. Legal
+        </div>
+      </div>
+      <div class="firma-box">
+        <div class="firma-title">EL ARRENDATARIO</div>
+        <div class="firma-line"></div>
+        <div class="firma-detail">
+          Nombre: <input style="border:none;border-bottom:1px solid #CCC;outline:none;width:100%;font-size:11px;padding:2px 0;margin-top:4px;" type="text" placeholder="________________"><br><br>
+          C.C. / NIT: <input style="border:none;border-bottom:1px solid #CCC;outline:none;width:80%;font-size:11px;padding:2px 0;" type="text" placeholder="________________">
+        </div>
+      </div>
+    </div>
+    <div style="padding:10px 16px; font-size:11px; color:#AAA; text-align:center; border-top:1px solid #F0F0F0;">
+      COMERCIAL INTEGRAR SERVICES · Mat. Mercantil 0000066552 · ESPAÑA RUALES DARWIN ROBIN · WP: 315 600 9728
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- FOOTER FIJO -->
+<div class="sticky-footer">
+  <button class="btn-clear" onclick="limpiar()">↺ Nueva</button>
+  <button class="btn-print" onclick="window.print()">🖨 Imprimir / Guardar PDF</button>
+</div>
+
+<script>
+// ── DATOS DE ITEMS ──────────────────────────────────────────────────────────
+const zonas = [
+  { grupo: null,        nombre: "Capó / cofre" },
+  { grupo: null,        nombre: "Guardabarro delantero izquierdo" },
+  { grupo: null,        nombre: "Guardabarro delantero derecho" },
+  { grupo: null,        nombre: "Puerta delantera izquierda" },
+  { grupo: null,        nombre: "Puerta delantera derecha" },
+  { grupo: null,        nombre: "Puerta trasera izquierda" },
+  { grupo: null,        nombre: "Puerta trasera derecha" },
+  { grupo: null,        nombre: "Panal lateral izquierdo" },
+  { grupo: null,        nombre: "Panal lateral derecho" },
+  { grupo: null,        nombre: "Compuerta trasera" },
+  { grupo: null,        nombre: "Parachoque delantero" },
+  { grupo: null,        nombre: "Parachoque trasero" },
+  { grupo: null,        nombre: "Techo" },
+  { grupo: null,        nombre: "Parabrisas delantero" },
+  { grupo: null,        nombre: "Vidrio trasero" },
+  { grupo: null,        nombre: "Vidrios laterales (4)" },
+  { grupo: null,        nombre: "Espejos retrovisores (2)" },
+  { grupo: null,        nombre: "Llantas (4) + repuesto" },
+  { grupo: null,        nombre: "Rines (4)" },
+  { grupo: null,        nombre: "Estribos laterales" },
+  { grupo: "INTERIOR",  nombre: "Tapicería asientos delanteros" },
+  { grupo: null,        nombre: "Tapicería asientos traseros (2a y 3a fila)" },
+  { grupo: null,        nombre: "Tablero / panel de instrumentos" },
+  { grupo: null,        nombre: "Consola central" },
+  { grupo: null,        nombre: "Timón / levas de cambio" },
+  { grupo: null,        nombre: "Tapetes (4)" },
+  { grupo: null,        nombre: "Sunroof panorámico" },
+  { grupo: null,        nombre: "Sistema multimedia / pantalla" },
+  { grupo: null,        nombre: "Aire acondicionado" },
+  { grupo: null,        nombre: "Cinturones de seguridad (7)" },
+  { grupo: null,        nombre: "Alarma perimetral / pito emergencia" },
+  { grupo: "BLINDAJE",  nombre: "Sellado puertas (sin huecos visibles)" },
+  { grupo: null,        nombre: "Vidrios blindados (sin fisuras)" },
+  { grupo: null,        nombre: "Piso (sin perforaciones visibles)" },
+  { grupo: null,        nombre: "Paral posterior" },
+  { grupo: null,        nombre: "Compuerta trasera blindada" },
+  { grupo: "MECÁNICO",  nombre: "Motor (sin ruidos al arrancar)" },
+  { grupo: null,        nombre: "Transmisión / cambios" },
+  { grupo: null,        nombre: "Sistema 4WD (todos los modos)" },
+  { grupo: null,        nombre: "Frenos (pedal firme)" },
+  { grupo: null,        nombre: "Luces delanteras (bajas y altas)" },
+  { grupo: null,        nombre: "Luces traseras / stop / direccionales" },
+  { grupo: null,        nombre: "Nivel aceite / refrigerante / frenos" },
+  { grupo: null,        nombre: "Batería" },
+  { grupo: "DOCUMENTOS Y ACCESORIOS", nombre: "Tarjeta de propiedad" },
+  { grupo: null,        nombre: "SOAT vigente" },
+  { grupo: null,        nombre: "Certificado blindaje Neosecurity" },
+  { grupo: null,        nombre: "Gato hidráulico + llave ruedas" },
+  { grupo: null,        nombre: "Triángulos señalización (2)" },
+  { grupo: null,        nombre: "Extintor" },
+  { grupo: null,        nombre: "Llaves del vehículo (No.: ___)" },
+];
+
+// ── RENDER ITEMS ────────────────────────────────────────────────────────────
+const container = document.getElementById('items');
+const state = {};
+
+zonas.forEach((z, i) => {
+  state[i] = { val: null, obs: '' };
+
+  if (z.grupo) {
+    const gh = document.createElement('div');
+    gh.className = 'zone-header';
+    gh.textContent = z.grupo;
+    container.appendChild(gh);
+  }
+
+  // Fila principal
+  const row = document.createElement('div');
+  row.className = 'inspect-row';
+  row.id = 'row-' + i;
+  // Crear con createElement para compatibilidad iOS Safari
+  var nameDiv = document.createElement('div');
+  nameDiv.className = 'item-name';
+  nameDiv.textContent = z.nombre;
+  row.appendChild(nameDiv);
+
+  ['B','R','M','N'].forEach(function(k) {
+    var grp = document.createElement('div');
+    grp.className = 'check-group';
+    var circ = document.createElement('div');
+    circ.className = 'check-circle';
+    circ.id = k.toLowerCase() + '-' + i;
+    circ.textContent = k === 'N' ? 'N/A' : k;
+    if(k === 'N') circ.style.fontSize = '9px';
+    (function(key, idx){ 
+      circ.addEventListener('click', function(e){ mark(e, idx, key); });
+    })(k, i);
+    grp.appendChild(circ);
+    row.appendChild(grp);
+  });
+  container.appendChild(row);
+
+  // Fila de observación (oculta por defecto)
+  const obsRow = document.createElement('div');
+  obsRow.className = 'obs-row';
+  obsRow.id = 'obs-row-' + i;
+  obsRow.innerHTML = `
+    <span style="font-size:11px;color:#888;min-width:60px;">Obs:</span>
+    <input class="obs-input" type="text" placeholder="Describe el daño..." 
+           oninput="state[${i}].obs=this.value" id="obs-input-${i}">
+  `;
+  container.appendChild(obsRow);
+});
+
+// ── MARCAR ESTADO ───────────────────────────────────────────────────────────
+function mark(e, i, val) {
+  e.stopPropagation();
+  const prev = state[i].val;
+  state[i].val = (prev === val) ? null : val;
+  const v = state[i].val;
+
+  var b = document.getElementById('b-'+i);
+  var r = document.getElementById('r-'+i);
+  var m = document.getElementById('m-'+i);
+  var n = document.getElementById('n-'+i);
+  if(b) b.className = 'check-circle' + (v==='B' ? ' B' : '');
+  if(r) r.className = 'check-circle' + (v==='R' ? ' R' : '');
+  if(m) m.className = 'check-circle' + (v==='M' ? ' M' : '');
+  if(n) n.className = 'check-circle' + (v==='N' ? ' NA' : '');
+
+  var row = document.getElementById('row-'+i);
+  if(row) {
+    row.classList.toggle('has-damage', v==='M');
+    row.classList.toggle('is-na', v==='N');
+  }
+
+  var obsRow = document.getElementById('obs-row-'+i);
+  if(obsRow) {
+    if(v === 'M') {
+      obsRow.classList.add('visible');
+      var obsInput = document.getElementById('obs-input-'+i);
+      if(obsInput) setTimeout(function(){ obsInput.focus(); }, 100);
+    } else {
+      obsRow.classList.remove('visible');
+    }
+  }
+}
+
+// ── TIPO DE ACTA ────────────────────────────────────────────────────────────
+function setTipo(tipo) {
+  document.getElementById('btn-entrega').className = 'tipo-btn' + (tipo==='entrega' ? ' active-entrega' : '');
+  document.getElementById('btn-devolucion').className = 'tipo-btn' + (tipo==='devolucion' ? ' active-devolucion' : '');
+}
+
+// ── COMBUSTIBLE ─────────────────────────────────────────────────────────────
+function setFuel(el, val) {
+  document.querySelectorAll('.fuel-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── LIMPIAR ──────────────────────────────────────────────────────────────────
+function limpiar() {
+  if (!confirm('¿Limpiar todos los campos para una nueva acta?')) return;
+  document.querySelectorAll('input[type=text], input[type=number], input[type=tel], input[type=datetime-local], textarea').forEach(el => el.value = '');
+  document.querySelectorAll('.fuel-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.check-circle').forEach(c => c.className = 'check-circle');
+  document.querySelectorAll('.obs-row').forEach(r => r.classList.remove('visible'));
+  document.querySelectorAll('.inspect-row').forEach(r => { r.classList.remove('has-damage'); r.classList.remove('is-na'); });
+  document.getElementById('btn-entrega').className = 'tipo-btn';
+  document.getElementById('btn-devolucion').className = 'tipo-btn';
+  Object.keys(state).forEach(i => { state[i] = { val: null, obs: '' }; });
+}
+
+// ── FECHA/HORA AUTO ──────────────────────────────────────────────────────────
+(function() {
+  const now = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  const local = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  document.getElementById('fecha-hora').value = local;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Comercial Integrar Services — Arrendamiento Golf</title>
+<style>
+:root {
+  --gold:#C9A14A; --gold-l:#FBF5E6; --gold-b:#E8DCB8;
+  --black:#0A0A0A; --dark:#1A1A1A; --gray:#666;
+  --lgray:#F5F5F5; --mgray:#DDD; --white:#FFF;
+  --green:#27AE60; --red:#E74C3C;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Helvetica Neue',Arial,sans-serif;background:#EFEFEF;color:var(--dark);}
+
+/* ── HEADER ── */
+.hdr{background:var(--black);padding:16px 20px;border-bottom:3px solid var(--gold);}
+.hdr .brand{color:var(--gold);font-size:16px;font-weight:800;letter-spacing:1px;}
+.hdr .sub{color:#888;font-size:11px;margin-top:2px;}
+.hdr .badge{display:inline-block;background:var(--gold);color:var(--black);font-size:11px;font-weight:800;padding:4px 14px;border-radius:20px;margin-top:8px;}
+
+/* ── TABS ── */
+.tabs{display:flex;background:var(--white);border-bottom:2px solid var(--mgray);position:sticky;top:0;z-index:50;}
+.tab{flex:1;padding:13px 8px;text-align:center;font-size:12px;font-weight:700;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* ── PAGE ── */
+.page{max-width:600px;margin:0 auto;padding:14px 12px 100px;}
+
+/* ── CARD ── */
+.card{background:var(--white);border-radius:10px;margin-bottom:14px;overflow:hidden;box-shadow:0 1px 5px rgba(0,0,0,.08);}
+.card-title{background:var(--black);color:var(--gold);font-size:11px;font-weight:800;letter-spacing:1.5px;padding:10px 16px;text-transform:uppercase;}
+
+/* ── FIELDS ── */
+.field{border-bottom:1px solid #F0F0F0;}
+.field:last-child{border-bottom:none;}
+.field label{display:block;font-size:10px;font-weight:700;color:var(--gray);padding:8px 14px 0;text-transform:uppercase;letter-spacing:.5px;}
+.field input,.field select,.field textarea{width:100%;border:none;outline:none;padding:5px 14px 10px;font-size:16px;color:var(--dark);background:transparent;font-family:inherit;-webkit-appearance:none;border-radius:0;}
+.field input:focus,.field select:focus,.field textarea:focus{background:#FFFBF0;}
+.field-2col{display:grid;grid-template-columns:1fr 1fr;}
+.field-2col .field{border-right:1px solid #F0F0F0;}
+.field-2col .field:last-child{border-right:none;}
+
+/* ── TIPO CLIENTE ── */
+.tipo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px;}
+.tipo-btn{border:2px solid var(--mgray);border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:var(--lgray);transition:all .15s;}
+.tipo-btn.active{border-color:var(--gold);background:var(--gold-l);}
+.tipo-btn .ico{font-size:26px;margin-bottom:4px;}
+.tipo-btn .lbl{font-size:13px;font-weight:700;}
+
+/* ── DÍAS ── */
+.dias-wrap{display:flex;flex-wrap:wrap;gap:8px;padding:10px 14px 14px;}
+.dia-btn{width:42px;height:42px;border:1.5px solid var(--mgray);border-radius:8px;background:var(--lgray);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gray);transition:all .15s;}
+.dia-btn.active{border-color:var(--gold);background:var(--gold-l);color:#7A5800;}
+.dia-custom{width:64px;height:42px;border:1.5px solid var(--mgray);border-radius:8px;padding:0 8px;font-size:13px;font-weight:700;text-align:center;outline:none;}
+
+
+/* ── TARIFAS ── */
+.tarifa-grid{display:grid;grid-template-columns:1fr;gap:8px;padding:14px;}
+.tarifa-card{border:2px solid var(--mgray);border-radius:8px;padding:12px 14px;cursor:pointer;background:var(--lgray);transition:all .15s;display:flex;justify-content:space-between;align-items:center;}
+.tarifa-card.active{border-color:var(--gold);background:var(--gold-l);}
+.tarifa-card .t-left .t-nombre{font-size:13px;font-weight:800;color:var(--dark);}
+.tarifa-card .t-left .t-desc{font-size:11px;color:var(--gray);margin-top:2px;}
+.tarifa-card .t-precio{font-size:17px;font-weight:800;color:var(--gold);}
+.tarifa-card.active .t-precio{color:#7A5800;}
+
+/* ── COMBUSTIBLE ── */
+.fuel-wrap{display:flex;gap:6px;padding:8px 14px 12px;flex-wrap:wrap;}
+.fuel-btn{padding:7px 14px;border:1.5px solid var(--mgray);border-radius:20px;background:var(--lgray);font-size:12px;font-weight:600;cursor:pointer;color:var(--gray);}
+.fuel-btn.active{border-color:var(--gold);background:var(--gold-l);color:#7A5800;}
+
+/* ── DOCS UPLOAD ── */
+.doc-upload-lbl{display:flex;align-items:center;gap:10px;cursor:pointer;background:var(--lgray);border:1.5px dashed var(--mgray);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--gray);font-weight:600;}
+.doc-upload-lbl.ok{border-color:var(--green);background:#EAF7EE;color:var(--green);}
+.doc-preview{display:none;width:100%;border-radius:8px;margin-top:8px;border:1px solid var(--mgray);}
+
+/* ── RESUMEN ── */
+.res-row{display:flex;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #F0F0F0;font-size:13px;}
+.res-row:last-child{border-bottom:none;}
+.res-total{background:var(--black);}
+.res-total span:first-child{color:var(--gold);font-weight:700;}
+.res-total span:last-child{color:var(--gold);font-size:18px;font-weight:800;}
+
+/* ── INFO BOX ── */
+.info-box{margin:0 14px 14px;background:var(--gold-l);border:1px solid var(--gold-b);border-radius:8px;padding:12px 14px;font-size:12px;color:#7A5800;line-height:1.6;}
+
+/* ── FOOTER ── */
+.sticky-footer{position:fixed;bottom:0;left:0;right:0;background:var(--black);padding:12px 16px;border-top:3px solid var(--gold);display:flex;gap:10px;z-index:100;}
+.btn-gold{flex:1;background:var(--gold);color:var(--black);border:none;border-radius:8px;padding:14px;font-size:14px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+.btn-dark{background:transparent;color:#888;border:1.5px solid #333;border-radius:8px;padding:14px;font-size:13px;font-weight:700;cursor:pointer;}
+
+/* ══════════════════════════════
+   IMPRESIÓN
+══════════════════════════════ */
+#doc-print{display:none;}
+
+@media print{
+  body>*:not(#doc-print){display:none!important;}
+  #doc-print{display:block!important;}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  @page{size:A4;margin:1.8cm 2cm;}
+
+  .ph{display:flex;justify-content:space-between;margin-bottom:16pt;border-bottom:3pt solid #C9A14A;}
+  .ph-left{background:#0A0A0A;padding:10pt 14pt;flex:1;}
+  .ph-left .pbn{color:#C9A14A;font-size:13pt;font-weight:800;letter-spacing:1px;}
+  .ph-left .pbs{color:#999;font-size:8pt;margin-top:2pt;}
+  .ph-right{background:#C9A14A;padding:10pt 14pt;display:flex;flex-direction:column;justify-content:center;min-width:100pt;}
+  .ph-right span{font-size:9pt;font-weight:800;color:#0A0A0A;text-align:center;line-height:1.4;}
+
+  .ps{font-size:9pt;font-weight:800;color:#C9A14A;letter-spacing:1pt;text-transform:uppercase;margin:12pt 0 5pt;border-bottom:1.5pt solid #C9A14A;padding-bottom:3pt;}
+  .pp{font-size:8.5pt;color:#444;line-height:1.6;margin-bottom:5pt;text-align:justify;}
+  .pb{font-weight:700;color:#1A1A1A;}
+  .pa{background:#FFF8E7;border:1pt solid #E8DCB8;border-radius:3pt;padding:7pt 9pt;font-size:8pt;color:#7A5800;font-weight:700;margin:6pt 0;line-height:1.5;}
+  .pli{font-size:8.5pt;color:#444;margin:2pt 0 2pt 12pt;line-height:1.5;}
+
+  .pt{width:100%;border-collapse:collapse;font-size:8.5pt;margin-bottom:8pt;}
+  .pt td{padding:4pt 6pt;border:.5pt solid #DDD;}
+  .pt .dl{background:#F5F5F5;font-weight:700;color:#333;width:33%;}
+  .pt .dv{color:#1A1A1A;font-weight:600;}
+  .pt .th{background:#0A0A0A;color:#C9A14A;font-weight:800;text-align:center;}
+  .pt .zh{background:#C9A14A;color:#0A0A0A;font-weight:800;font-size:8pt;}
+  .pt .cb{text-align:center;}
+
+  .fg{display:grid;grid-template-columns:1fr 1fr;gap:20pt;margin-top:10pt;}
+  .fb .ft{color:#C9A14A;font-size:8pt;font-weight:800;letter-spacing:1pt;margin-bottom:18pt;}
+  .fb .fl{border-bottom:1pt solid #CCC;margin-bottom:5pt;}
+  .fb .fd{font-size:7.5pt;color:#666;line-height:1.8;}
+  .fb .fd strong{color:#1A1A1A;}
+
+  .pf{font-size:7pt;color:#AAA;margin-top:16pt;border-top:.5pt solid #DDD;padding-top:5pt;text-align:center;}
+  .pb2{page-break-before:always;}
+  .nob{page-break-inside:avoid;}
+
+  /* Fotos docs en impresión */
+  .doc-foto-grid{display:grid;grid-template-columns:1fr 1fr;gap:8pt;margin-top:6pt;}
+  .doc-foto-item{text-align:center;}
+  .doc-foto-item img{width:100%;max-height:80pt;object-fit:cover;border:1pt solid #DDD;border-radius:3pt;}
+  .doc-foto-item span{font-size:7pt;color:#888;display:block;margin-top:3pt;}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="brand">COMERCIAL INTEGRAR SERVICES</div>
+  <div class="sub">Mat. Mercantil No. 0000066552 — Orito, Putumayo</div>
+  <div class="badge">ARRENDAMIENTO — VOLKSWAGEN GOLF</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" id="tab-c" onclick="setTab('c')">👤 Cliente</div>
+  <div class="tab" id="tab-k" onclick="setTab('k')">📅 Contrato</div>
+</div>
+
+<!-- ══ TAB CLIENTE ══ -->
+<div id="pan-c" class="page">
+
+  <div class="card">
+    <div class="card-title">Tipo de cliente</div>
+    <div class="tipo-grid">
+      <div class="tipo-btn active" id="tn" onclick="setTipo('n')">
+        <div class="ico">👤</div><div class="lbl">Persona Natural</div>
+      </div>
+      <div class="tipo-btn" id="te" onclick="setTipo('e')">
+        <div class="ico">🏢</div><div class="lbl">Empresa</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERSONA NATURAL -->
+  <div class="card" id="blk-n">
+    <div class="card-title">Datos personales</div>
+    <div class="field"><label>Nombre completo *</label><input id="nombre" type="text" placeholder="Ej: Carlos Pérez López"></div>
+    <div class="field"><label>Cédula de ciudadanía *</label><input id="cc" type="number" placeholder="Número de cédula"></div>
+    <div class="field"><label>Ciudad expedición cédula</label><input id="ciudad-exp" type="text" placeholder="Ej: Orito, Putumayo"></div>
+    <div class="field"><label>Celular / WhatsApp *</label><input id="celular" type="tel" placeholder="Ej: 3201234567"></div>
+    <div class="field"><label>Correo electrónico</label><input id="email" type="email" placeholder="correo@ejemplo.com"></div>
+    <div class="field"><label>Dirección *</label><input id="dir" type="text" placeholder="Calle, barrio"></div>
+    <div class="field"><label>Municipio *</label><input id="mun" type="text" placeholder="Ej: Orito, Putumayo"></div>
+  </div>
+
+  <!-- EMPRESA -->
+  <div class="card" id="blk-e" style="display:none">
+    <div class="card-title">Datos empresa</div>
+    <div class="field"><label>Razón social *</label><input id="razon" type="text" placeholder="Nombre legal empresa"></div>
+    <div class="field"><label>NIT *</label><input id="nit" type="text" placeholder="Ej: 900123456-7"></div>
+    <div class="field"><label>Representante legal *</label><input id="rep" type="text" placeholder="Nombre completo"></div>
+    <div class="field"><label>Cédula representante *</label><input id="rep-cc" type="number" placeholder="Número cédula"></div>
+    <div class="field"><label>Cargo</label><input id="rep-cargo" type="text" placeholder="Ej: Gerente General"></div>
+    <div class="field"><label>Celular / WhatsApp *</label><input id="emp-cel" type="tel" placeholder="Ej: 3201234567"></div>
+    <div class="field"><label>Dirección *</label><input id="emp-dir" type="text" placeholder="Dirección empresa"></div>
+    <div class="field"><label>Municipio *</label><input id="emp-mun" type="text" placeholder="Ej: Orito, Putumayo"></div>
+  </div>
+
+  <!-- LICENCIA -->
+  <div class="card">
+    <div class="card-title">Licencia de conducción</div>
+    <div class="field"><label>No. licencia</label><input id="lic" type="text" placeholder="Número"></div>
+    <div class="field-2col">
+      <div class="field"><label>Categoría</label>
+        <select id="cat-lic">
+          <option value="">Selecciona...</option>
+          <option>B1 — Automóvil</option>
+          <option>B2 — Camioneta / SUV</option>
+          <option>B3 — Campero</option>
+          <option>C1 — Camión</option>
+        </select>
+      </div>
+      <div class="field"><label>Vence</label><input id="lic-v" type="date"></div>
+    </div>
+  </div>
+
+  <!-- DOCUMENTOS -->
+  <div class="card">
+    <div class="card-title">Documentos del arrendatario</div>
+    <div class="info-box" style="margin:14px 14px 0;">
+      📋 Adjunta fotos claras. Se imprimen junto al contrato para el archivo físico.
+    </div>
+
+    <div class="field">
+      <label>Cédula — Frente *</label>
+      <div style="padding:6px 14px 12px;">
+        <label for="doc-cf" id="lbl-cf" class="doc-upload-lbl">
+          <span style="font-size:22px;">📷</span> Toca para subir foto
+        </label>
+        <input type="file" id="doc-cf" accept="image/*" style="opacity:0;position:absolute;width:1px;height:1px;overflow:hidden;" onchange="prevDoc(this,'lbl-cf','img-cf')">
+        <img id="img-cf" class="doc-preview">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Cédula — Reverso *</label>
+      <div style="padding:6px 14px 12px;">
+        <label for="doc-cr" id="lbl-cr" class="doc-upload-lbl">
+          <span style="font-size:22px;">📷</span> Toca para subir foto
+        </label>
+        <input type="file" id="doc-cr" accept="image/*" style="opacity:0;position:absolute;width:1px;height:1px;overflow:hidden;" onchange="prevDoc(this,'lbl-cr','img-cr')">
+        <img id="img-cr" class="doc-preview">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Licencia de conducción *</label>
+      <div style="padding:6px 14px 12px;">
+        <label for="doc-lic" id="lbl-lic" class="doc-upload-lbl">
+          <span style="font-size:22px;">🪪</span> Toca para subir foto
+        </label>
+        <input type="file" id="doc-lic" accept="image/*" style="opacity:0;position:absolute;width:1px;height:1px;overflow:hidden;" onchange="prevDoc(this,'lbl-lic','img-lic')">
+        <img id="img-lic" class="doc-preview">
+      </div>
+    </div>
+
+    <div class="field" style="border-bottom:none;">
+      <label>Selfie sosteniendo la cédula *</label>
+      <div style="padding:6px 14px 14px;">
+        <div class="info-box" style="margin:0 0 8px;">📌 Sostén tu cédula frente a tu cara mirando a la cámara.</div>
+        <label for="doc-sel" id="lbl-sel" class="doc-upload-lbl">
+          <span style="font-size:22px;">🤳</span> Toca para tomar selfie
+        </label>
+        <input type="file" id="doc-sel" accept="image/*" style="opacity:0;position:absolute;width:1px;height:1px;overflow:hidden;" onchange="prevDoc(this,'lbl-sel','img-sel')">
+        <img id="img-sel" class="doc-preview">
+      </div>
+    </div>
+  </div>
+
+</div><!-- /pan-c -->
+
+<!-- ══ TAB CONTRATO ══ -->
+<div id="pan-k" class="page" style="display:none">
+
+  <div class="card">
+    <div class="card-title">Tarifa y tipo de servicio</div>
+    <div class="tarifa-grid">
+      <div class="tarifa-card active" id="tar-local" onclick="setTarifa('local')">
+        <div class="t-left"><div class="t-nombre">🏙 Local — Zona urbana / municipal</div><div class="t-desc">Uso local dentro del municipio o zona cercana.</div></div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+          <div style="font-size:11px;color:var(--gray);font-weight:600;">$/día — editable</div>
+          <input id="tarifa-local-val" type="number" placeholder="Digita valor"
+            style="width:130px;border:1.5px solid var(--gold-border);border-radius:6px;padding:6px 8px;font-size:14px;font-weight:700;color:var(--dark);text-align:right;outline:none;background:var(--white);"
+            onclick="event.stopPropagation();setTarifa('local')"
+            oninput="updateTarifaGolf('local',this.value)"
+            value="250000">
+        </div>
+      </div>
+      <div class="tarifa-card" id="tar-nacional" onclick="setTarifa('nacional')">
+        <div class="t-left"><div class="t-nombre">🛣 Viaje largo / fuera del municipio</div><div class="t-desc">Destino fuera del municipio o departamento.</div></div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+          <div style="font-size:11px;color:var(--gray);font-weight:600;">$/día — editable</div>
+          <input id="tarifa-nacional-val" type="number" placeholder="Digita valor"
+            style="width:130px;border:1.5px solid var(--gold-border);border-radius:6px;padding:6px 8px;font-size:14px;font-weight:700;color:var(--dark);text-align:right;outline:none;background:var(--white);"
+            onclick="event.stopPropagation();setTarifa('nacional')"
+            oninput="updateTarifaGolf('nacional',this.value)"
+            value="350000">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Uso del vehículo</div>
+    <div class="field"><label>Origen (ciudad / municipio de salida) *</label><input id="origen" type="text" placeholder="Ej: Orito, Putumayo"></div>
+    <div class="field"><label>Destino (ciudad / municipio de llegada) *</label><input id="destino" type="text" placeholder="Ej: Mocoa, Putumayo"></div>
+    <div class="field"><label>Descripción breve del uso *</label>
+      <textarea id="uso" placeholder="Ej: Transporte ejecutivo para reunión / Viaje familiar / Diligencias personales..." style="min-height:70px;resize:vertical;font-size:16px;-webkit-appearance:none;"></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Período de alquiler</div>
+    <div style="padding:10px 14px 4px;font-size:10px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;">Número de días</div>
+    <div class="dias-wrap">
+      <div class="dia-btn active" onclick="setDias(this,1)">1</div>
+      <div class="dia-btn" onclick="setDias(this,2)">2</div>
+      <div class="dia-btn" onclick="setDias(this,3)">3</div>
+      <div class="dia-btn" onclick="setDias(this,5)">5</div>
+      <div class="dia-btn" onclick="setDias(this,7)">7</div>
+      <div class="dia-btn" onclick="setDias(this,10)">10</div>
+      <div class="dia-btn" onclick="setDias(this,15)">15</div>
+      <div class="dia-btn" onclick="setDias(this,30)">30</div>
+      <input class="dia-custom" type="number" placeholder="Otro" min="1" oninput="diasCustom(this.value)">
+    </div>
+    <div class="field-2col">
+      <div class="field"><label>Fecha entrega *</label><input id="fe" type="date" onchange="calcDev()"></div>
+      <div class="field"><label>Hora entrega</label><input id="he" type="time" value="08:00"></div>
+    </div>
+    <div class="field-2col">
+      <div class="field"><label>Fecha devolución</label><input id="fd" type="date"></div>
+      <div class="field"><label>Hora devolución</label><input id="hd" type="time" value="08:00"></div>
+    </div>
+    <div class="field"><label>Lugar de entrega</label><input id="lugar" type="text" placeholder="Ej: Orito, frente a la alcaldía"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Garantías y pago</div>
+    <div class="field"><label>No. contrato</label><input id="num" type="text" placeholder="Ej: 001-2026"></div>
+    <div class="field"><label>Depósito de garantía ($)</label><input id="dep" type="number" value="500000"></div>
+    <div class="field">
+      <label>Nivel combustible al entregar</label>
+      <div class="fuel-wrap">
+        <div class="fuel-btn" onclick="setFuel(this,'Lleno')">Lleno</div>
+        <div class="fuel-btn" onclick="setFuel(this,'3/4')">3/4</div>
+        <div class="fuel-btn active" onclick="setFuel(this,'1/2')">1/2</div>
+        <div class="fuel-btn" onclick="setFuel(this,'1/4')">1/4</div>
+        <div class="fuel-btn" onclick="setFuel(this,'Vacío')">Vacío</div>
+      </div>
+    </div>
+    <div class="field"><label>Km odómetro al entregar</label><input id="km" type="number" placeholder="Ej: 183250"></div>
+    <div class="field"><label>SOAT vigente hasta</label><input id="soat" type="text" placeholder="Fecha vencimiento SOAT"></div>
+    <div class="field"><label>Observaciones previas del vehículo</label>
+      <textarea id="obs" placeholder="Rayones, abolladuras u otras condiciones previas..." style="min-height:60px;resize:vertical;font-size:16px;-webkit-appearance:none;"></textarea>
+    </div>
+  </div>
+
+  <!-- RESUMEN -->
+  <div class="card">
+    <div class="card-title">Resumen</div>
+    <div class="res-row"><span style="color:var(--gray)">Tarifa por día</span><span style="font-weight:700" id="r-tarifa">$350.000</span></div>
+    <div class="res-row"><span style="color:var(--gray)">Tipo de servicio</span><span style="font-weight:700;font-size:12px;" id="r-servicio">Local — Putumayo</span></div>
+    <div class="res-row"><span style="color:var(--gray)">Días</span><span style="font-weight:700" id="r-dias">1 día</span></div>
+    <div class="res-row"><span style="color:var(--gray)">Depósito</span><span style="font-weight:700" id="r-dep">$500.000</span></div>
+    <div class="res-row res-total"><span>TOTAL ALQUILER</span><span id="r-total">$350.000</span></div>
+  </div>
+
+</div><!-- /pan-k -->
+
+<div class="sticky-footer">
+  <button class="btn-dark" onclick="limpiar()">↺ Nueva</button>
+  <button class="btn-gold" onclick="generar()">🖨 Generar e imprimir</button>
+</div>
+
+<!-- ══ DOCUMENTO IMPRIMIBLE ══ -->
+<div id="doc-print"></div>
+
+<script>
+const TARIFAS={local:250000,nacional:350000};
+const TARIFA_NOMBRES={local:'Local — Zona urbana / municipal',nacional:'Viaje largo — Fuera del municipio'};
+let tarifaKey='local';
+const MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+let tipo='n', dias=1, fuel='1/2';
+
+function v(id){const e=document.getElementById(id);return e?e.value.trim():'';}
+function fmtF(s){if(!s)return'_______________';const[y,m,d]=s.split('-');return`${parseInt(d)} de ${MESES[parseInt(m)-1]} de ${y}`;}
+function fmtN(n){return n.toLocaleString('es-CO');}
+
+
+// ── TARIFA ───────────────────────────────────────────────────────────────────
+function setTarifa(key){
+  tarifaKey=key;
+  ['local','nacional'].forEach(k=>{
+    const el=document.getElementById('tar-'+k);
+    if(el) el.className='tarifa-card'+(k===key?' active':'');
+  });
+  resumen();
+}
+
+
+// ── TARIFAS EDITABLES GOLF ───────────────────────────────────────────────────
+function updateTarifaGolf(key, val){
+  const n = parseInt(val)||0;
+  TARIFAS[key] = n;
+  if(tarifaKey===key) resumen();
+}
+
+// ── TIPO ─────────────────────────────────────────────────────────────────────
+function setTipo(t){
+  tipo=t;
+  document.getElementById('tn').className='tipo-btn'+(t==='n'?' active':'');
+  document.getElementById('te').className='tipo-btn'+(t==='e'?' active':'');
+  document.getElementById('blk-n').style.display=t==='n'?'block':'none';
+  document.getElementById('blk-e').style.display=t==='e'?'block':'none';
+}
+
+// ── TABS ─────────────────────────────────────────────────────────────────────
+function setTab(t){
+  ['c','k'].forEach(k=>{
+    document.getElementById('tab-'+k).className='tab'+(k===t?' active':'');
+    document.getElementById('pan-'+k).style.display=k===t?'block':'none';
+  });
+}
+
+// ── DÍAS ─────────────────────────────────────────────────────────────────────
+function setDias(el,n){
+  document.querySelectorAll('.dia-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelector('.dia-custom').value='';
+  dias=n; resumen(); calcDev();
+}
+function diasCustom(val){
+  if(!val)return;
+  document.querySelectorAll('.dia-btn').forEach(b=>b.classList.remove('active'));
+  dias=parseInt(val)||1; resumen(); calcDev();
+}
+function calcDev(){
+  const fe=v('fe'); if(!fe)return;
+  const d=new Date(fe+'T00:00:00'); d.setDate(d.getDate()+dias);
+  document.getElementById('fd').value=d.toISOString().split('T')[0];
+}
+function resumen(){
+  const dep=parseInt(v('dep'))||500000;
+  const tarifa=TARIFAS[tarifaKey];
+  document.getElementById('r-dias').textContent=dias+(dias===1?' día':' días');
+  document.getElementById('r-dep').textContent='$'+fmtN(dep);
+  document.getElementById('r-tarifa').textContent='$'+fmtN(tarifa);
+  document.getElementById('r-servicio').textContent=TARIFA_NOMBRES[tarifaKey];
+  document.getElementById('r-total').textContent='$'+fmtN(tarifa*dias);
+}
+function setFuel(el,val){
+  document.querySelectorAll('.fuel-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active'); fuel=val;
+}
+
+// ── PREVIEW DOCS ─────────────────────────────────────────────────────────────
+function prevDoc(input,lblId,imgId){
+  const file=input.files[0]; if(!file)return;
+  const lbl=document.getElementById(lblId);
+  const img=document.getElementById(imgId);
+  lbl.textContent='✅ '+file.name;
+  lbl.className='doc-upload-lbl ok';
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const im=new Image();
+    im.onload=()=>{
+      const MAX=600,c=document.createElement('canvas');
+      let w=im.width,h=im.height;
+      if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
+      c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);
+      img.src=c.toDataURL('image/jpeg',0.45);img.style.display='block';
+    };im.src=e.target.result;
+  };reader.readAsDataURL(file);
+}
+
+// ── DATOS ─────────────────────────────────────────────────────────────────────
+function getDatos(){
+  const es=tipo==='e';
+  return{
+    es,
+    nombre:   es?v('rep'):v('nombre'),
+    cc:       es?v('rep-cc'):v('cc'),
+    ciudad_exp: v('ciudad-exp'),
+    celular:  es?v('emp-cel'):v('celular'),
+    email:    v('email'),
+    dir:      es?v('emp-dir'):v('dir'),
+    mun:      es?v('emp-mun'):v('mun'),
+    razon:    v('razon'), nit: v('nit'), rep_cargo: v('rep-cargo'),
+    lic:      v('lic'), cat_lic: v('cat-lic'), lic_v: v('lic-v'),
+    dias, fe: v('fe'), he: v('he'), fd: v('fd'), hd: v('hd'),
+    lugar:    v('lugar'),
+    dep:      parseInt(v('dep'))||500000,
+    km:       v('km'), soat: v('soat'), fuel, obs: v('obs'),
+    num:      v('num'),
+    tarifa_key: tarifaKey,
+    tarifa:   TARIFAS[tarifaKey],
+    tarifa_nombre: TARIFA_NOMBRES[tarifaKey],
+    origen:   v('origen'),
+    destino:  v('destino'),
+    uso:      v('uso'),
+    total:    TARIFAS[tarifaKey]*dias,
+    // fotos
+    imgCF:    document.getElementById('img-cf').src||'',
+    imgCR:    document.getElementById('img-cr').src||'',
+    imgLic:   document.getElementById('img-lic').src||'',
+    imgSel:   document.getElementById('img-sel').src||'',
+  };
+}
+
+// ── GENERAR ──────────────────────────────────────────────────────────────────
+function generar(){
+  const d=getDatos();
+  if(!d.nombre){alert('Ingresa el nombre del arrendatario.');return;}
+  if(!d.cc){alert('Ingresa la cédula o NIT.');return;}
+  if(!d.celular){alert('Ingresa el celular.');return;}
+  if(!d.fe){alert('Ingresa la fecha de entrega (pestaña Contrato).');return;}
+  if(!d.origen||!d.destino){alert('Ingresa el origen y destino (pestaña Contrato).');return;}
+  if(!d.uso){alert('Describe el uso del vehículo (pestaña Contrato).');return;}
+
+  const hoy=new Date();
+  const ciudad=d.mun||'Orito';
+  const depL=n2l(d.dep);
+  const totL=n2l(d.total);
+
+  // Fotos para imprimir
+  const fotoHTML=(src,lbl)=>src&&src.length>100
+    ?`<div class="doc-foto-item"><img src="${src}"><span>${lbl}</span></div>`
+    :`<div class="doc-foto-item" style="border:1pt dashed #CCC;min-height:60pt;display:flex;align-items:center;justify-content:center;border-radius:3pt;"><span style="font-size:7pt;color:#AAA;">${lbl} — no adjuntada</span></div>`;
+
+  const zonas=[
+    {g:'EXTERIOR',items:['Capó / cofre','Guardabarro delantero izq.','Guardabarro delantero der.','Puerta delantera izq.','Puerta delantera der.','Puerta trasera izq.','Puerta trasera der.','Panal lateral izq.','Panal lateral der.','Compuerta trasera','Parachoque delantero','Parachoque trasero','Techo','Parabrisas delantero','Vidrio trasero','Vidrios laterales (4)','Espejos (2)','Llantas (4) + repuesto','Rines (4)','Estribos laterales']},
+    {g:'INTERIOR',items:['Tapicería asientos del.','Tapicería asientos tras.','Tablero / panel','Consola central','Timón / levas','Tapetes (4)','Sunroof','Multimedia / pantalla','Aire acondicionado','Cinturones (7)','Alarma / pito emergencia']},
+    {g:'BLINDAJE',items:['Sellado puertas (sin huecos)','Vidrios blindados (sin fisuras)','Piso (sin perforaciones)','Paral posterior','Compuerta trasera blindada']},
+    {g:'MECÁNICO',items:['Motor (sin ruidos)','Transmisión / cambios','Sistema 4WD','Frenos','Luces delanteras','Luces traseras / stop','Nivel aceite / refrigerante','Batería']},
+    {g:'DOCUMENTOS',items:['Tarjeta de propiedad','SOAT vigente','Cert. blindaje Neosecurity','Gato + llave ruedas','Triángulos (2)','Extintor','Llaves del vehículo']},
+  ];
+  let filas='';
+  zonas.forEach(z=>{
+    filas+=`<tr><td colspan="5" class="zh">${z.g}</td></tr>`;
+    z.items.forEach(it=>filas+=`<tr><td>${it}</td><td class="cb">☐</td><td class="cb">☐</td><td class="cb">☐</td><td></td></tr>`);
+  });
+
+  document.getElementById('doc-print').innerHTML=`
+
+  <!-- ══ CONTRATO ══ -->
+  <div class="ph">
+    <div class="ph-left">
+      <div class="pbn">COMERCIAL INTEGRAR SERVICES</div>
+      <div class="pbs">Est. de Comercio — Mat. Mercantil No. 0000066552 — Orito, Putumayo</div>
+    </div>
+    <div class="ph-right"><span>CONTRATO DE<br>ARRENDAMIENTO<br>VOLKSWAGEN GOLF</span></div>
+  </div>
+
+  <p class="pp">En la ciudad de <span class="pb">${ciudad}</span>, a los <span class="pb">${hoy.getDate()}</span> días del mes de <span class="pb">${MESES[hoy.getMonth()]}</span> de <span class="pb">${hoy.getFullYear()}</span>, se celebra el presente Contrato de Arrendamiento de Vehículo, entre las partes que se identifican a continuación. <span class="pb">No. Contrato: ${d.num||'_______'}</span></p>
+
+  <!-- 1. PARTES -->
+  <div class="ps">1. Partes del Contrato</div>
+  <p class="pp pb">1.1 El Arrendador</p>
+  <table class="pt">
+    <tr><td class="dl">Razón social</td><td class="dv">COMERCIAL INTEGRAR SERVICES</td></tr>
+    <tr><td class="dl">Tipo</td><td class="dv">Establecimiento de comercio (persona natural)</td></tr>
+    <tr><td class="dl">Mat. mercantil</td><td class="dv">No. 0000066552 — C. de Comercio de Orito, Putumayo</td></tr>
+    <tr><td class="dl">Propietario</td><td class="dv">ESPAÑA RUALES DARWIN ROBIN</td></tr>
+    <tr><td class="dl">C.C. / NIT</td><td class="dv">1.061.733.315-3</td></tr>
+    <tr><td class="dl">Dirección</td><td class="dv">CL 3 N 8 86 BRR Unión — Orito, Putumayo</td></tr>
+    <tr><td class="dl">Correo</td><td class="dv">ingrobinespana@gmail.com</td></tr>
+    <tr><td class="dl">Teléfono / WhatsApp</td><td class="dv">315 600 9728</td></tr>
+  </table>
+  <p class="pp">Para efectos del presente contrato, los datos del arrendador quedan consignados así: <span class="pb">Razón social:</span> COMERCIAL INTEGRAR SERVICES — <span class="pb">Est. de Comercio / Mat. Mercantil:</span> No. 0000066552 — C. de Comercio Orito, Putumayo — <span class="pb">Propietario:</span> ESPAÑA RUALES DARWIN ROBIN — C.C. 1.061.733.315-3 — NIT 1.061.733.315-3 — WP: 315 600 9728</p>
+
+  <p class="pp pb">1.2 El Arrendatario</p>
+  <table class="pt">
+    ${d.es?'<tr><td class="dl">Razón social</td><td class="dv">'+d.razon+'</td></tr><tr><td class="dl">NIT</td><td class="dv">'+d.nit+'</td></tr>':''}
+    <tr><td class="dl">${d.es?'Representante legal':'Nombre completo'}</td><td class="dv">${d.nombre}</td></tr>
+    <tr><td class="dl">C.C.${d.es?' representante':''}</td><td class="dv">${d.cc}${d.ciudad_exp?' — Exp. '+d.ciudad_exp:''}</td></tr>
+    ${d.rep_cargo?'<tr><td class="dl">Cargo</td><td class="dv">'+d.rep_cargo+'</td></tr>':''}
+    <tr><td class="dl">Teléfono / WhatsApp</td><td class="dv">${d.celular}</td></tr>
+    ${d.email?'<tr><td class="dl">Correo electrónico</td><td class="dv">'+d.email+'</td></tr>':''}
+    <tr><td class="dl">Dirección de residencia</td><td class="dv">${d.dir||'_______________'}</td></tr>
+    <tr><td class="dl">Ciudad / Municipio</td><td class="dv">${d.mun}</td></tr>
+    <tr><td class="dl">Licencia de conducción</td><td class="dv">${d.lic||'___________'} — Cat: ${d.cat_lic||'___'} — Vence: ${d.lic_v||'___________'}</td></tr>
+  </table>
+
+  <!-- 2. VEHÍCULO -->
+  <div class="ps">2. Identificación del Vehículo</div>
+  <table class="pt">
+    <tr><td class="dl">Marca / Línea</td><td class="dv">VOLKSWAGEN / Golf</td></tr>
+    <tr><td class="dl">Modelo / Año</td><td class="dv">2017</td></tr>
+    <tr><td class="dl">Color</td><td class="dv">Gris Platino Metálico</td></tr>
+    <tr><td class="dl">Placa</td><td class="dv">JJU766</td></tr>
+    <tr><td class="dl">No. de chasis</td><td class="dv">3VWV66AU8HM039837</td></tr>
+    <tr><td class="dl">No. de motor</td><td class="dv">CZD266783</td></tr>
+    <tr><td class="dl">Cilindraje</td><td class="dv">1395 cc</td></tr>
+    <tr><td class="dl">Clase de vehículo</td><td class="dv">Automóvil particular</td></tr>
+    <tr><td class="dl">Organismo de tránsito</td><td class="dv">Manizales</td></tr>
+    <tr><td class="dl">SOAT vigente hasta</td><td class="dv">${d.soat||'_______________'}</td></tr>
+    <tr><td class="dl">Seguro todo riesgo</td><td class="dv">__________________________</td></tr>
+    <tr><td class="dl">Km al momento entrega</td><td class="dv">${d.km||'_______________'}</td></tr>
+  </table>
+  <div class="pa">⚠ Cualquier daño al vehículo no cubierto por seguro o por responsabilidad de un tercero identificado será responsabilidad exclusiva del Arrendatario, quien deberá responder por la totalidad del costo de reparación.</div>
+  ${d.obs?'<p class="pp"><span class="pb">Estado previo del vehículo observado:</span> '+d.obs+'</p>':''}
+
+  <!-- 3. CONDICIONES -->
+  <div class="ps">3. Condiciones del Arrendamiento</div>
+  <table class="pt">
+    <tr><td class="dl">Fecha de entrega</td><td class="dv">${fmtF(d.fe)}</td></tr>
+    <tr><td class="dl">Hora de entrega</td><td class="dv">${d.he}</td></tr>
+    <tr><td class="dl">Fecha de devolución</td><td class="dv">${fmtF(d.fd)}</td></tr>
+    <tr><td class="dl">Hora de devolución</td><td class="dv">${d.hd}</td></tr>
+    <tr><td class="dl">Lugar de entrega</td><td class="dv">${d.lugar||'_______________'}</td></tr>
+    <tr><td class="dl">Lugar de devolución</td><td class="dv">${d.lugar||'_______________'}</td></tr>
+    <tr><td class="dl">Tipo de servicio</td><td class="dv">${d.tarifa_nombre}</td></tr>
+    <tr><td class="dl">Tarifa diaria</td><td class="dv">$${fmtN(d.tarifa)}</td></tr>
+    <tr><td class="dl">No. de días pactados</td><td class="dv">${d.dias}</td></tr>
+    <tr><td class="dl">Valor total contrato</td><td class="dv"><span class="pb">$${fmtN(d.total)}</span></td></tr>
+    <tr><td class="dl">Forma de pago</td><td class="dv">Efectivo al momento de la entrega</td></tr>
+    <tr><td class="dl">Depósito de garantía</td><td class="dv">$${fmtN(d.dep)}</td></tr>
+  </table>
+  <p class="pp"><span class="pb">VALOR EN LETRAS:</span> ${totL} pesos colombianos M/CTE</p>
+  <p class="pp"><span class="pb">DEPÓSITO EN LETRAS:</span> ${depL} pesos colombianos M/CTE</p>
+
+  <!-- 4. USO AUTORIZADO -->
+  <div class="ps">4. Uso Autorizado del Vehículo</div>
+  <table class="pt">
+    <tr><td class="dl">Origen</td><td class="dv">${d.origen||'_______________'}</td></tr>
+    <tr><td class="dl">Destino</td><td class="dv">${d.destino||'_______________'}</td></tr>
+    <tr><td class="dl">Descripción del uso</td><td class="dv">${d.uso||'_____________________________________________'}</td></tr>
+  </table>
+  <p class="pp">El Arrendatario declara que el uso del vehículo se limitará exclusivamente al origen, destino y actividad descritos. Cualquier uso diferente al declarado faculta al Arrendador para dar por terminado el contrato de manera inmediata, sin reembolso del depósito ni de los días no utilizados.</p>
+
+  <!-- 5. OBLIGACIONES -->
+  <div class="ps">5. Obligaciones del Arrendatario</div>
+  <p class="pp pb">El Arrendatario se obliga a:</p>
+  <p class="pli">• Utilizar el vehículo exclusivamente para transporte personal o corporativo lícito, en las vías y horarios acordados.</p>
+  <p class="pli">• No ceder, subarrendar ni permitir que terceros no autorizados conduzcan el vehículo. Solo podrá conducirlo la persona identificada en este contrato.</p>
+  <p class="pli">• Devolver el vehículo en las mismas condiciones mecánicas y estéticas en que fue recibido, según el Acta de Entrega.</p>
+  <p class="pli">• Asumir el costo total de combustible, peajes, parqueaderos, multas de tránsito y cualquier infracción generada durante el período de arrendamiento.</p>
+  <p class="pli">• Reportar de inmediato cualquier accidente, daño, hurto o anomalía al arrendador (WP: 315 600 9728), y en caso de accidente llamar a las autoridades antes de mover el vehículo.</p>
+  <p class="pli">• No ingresar el vehículo a zonas de orden público, operaciones ilegales, ni utilizarlo en actividades de riesgo.</p>
+  <p class="pli">• Respetar el horario de devolución pactado. Por cada hora de retraso se cobrará el equivalente proporcional a la tarifa diaria.</p>
+  <p class="pli">• No realizar modificaciones, intervenciones, ni retirar ningún elemento del vehículo sin autorización escrita del arrendador.</p>
+  <p class="pli">• No conducir bajo efectos de alcohol, sustancias psicoactivas o en condición de incapacidad física.</p>
+
+  <!-- 6. RESPONSABILIDAD -->
+  <div class="ps">6. Responsabilidad por Daños, Accidentes y Pérdida</div>
+  <p class="pp pb">6.1 Daños al vehículo</p>
+  <p class="pp">El Arrendatario responde por la totalidad de los daños causados al vehículo durante el período de arrendamiento, incluyendo:</p>
+  <p class="pli">• Daños mecánicos por uso inadecuado o negligente.</p>
+  <p class="pli">• Daños estéticos: abolladuras, rayones, rotura de vidrios o plásticos.</p>
+  <p class="pli">• Daños por colisión, volcamiento o cualquier siniestro en que el Arrendatario sea responsable.</p>
+  <p class="pli">• Pérdida de piezas, accesorios o elementos que compongan el vehículo al momento de entrega.</p>
+  <p class="pp pb">6.2 Accidente con terceros</p>
+  <p class="pp">En caso de accidente que involucre a terceros, el SOAT cubrirá lesiones personales según la ley. Sin embargo, los daños al vehículo del arrendador NO cubiertos por seguro serán asumidos íntegramente por el Arrendatario. Si el tercero causante del accidente es identificado y tiene seguro, el Arrendatario deberá colaborar en el proceso de reclamación.</p>
+  <p class="pp pb">6.3 Hurto o pérdida total</p>
+  <p class="pp">En caso de hurto, pérdida total o pérdida parcial del vehículo, el Arrendatario responde por el valor comercial del mismo según avalúo técnico vigente, más los costos de trámites legales. Esta obligación subsiste aunque el vehículo sea recuperado en condición de pérdida total.</p>
+  <p class="pp pb">6.4 Cobro ejecutivo mediante pagaré</p>
+  <p class="pp">Para garantizar el cumplimiento de todas las obligaciones económicas derivadas del presente contrato (reparaciones, daños, hurto, mora, multas no pagadas, etc.), el Arrendatario firma un <span class="pb">Pagaré en Blanco con Carta de Instrucciones</span>, el cual podrá ser diligenciado y cobrado por vía ejecutiva por el Arrendador sin necesidad de proceso declarativo previo, ante cualquier despacho judicial competente.</p>
+
+  <!-- 7. GARANTÍAS -->
+  <div class="ps">7. Garantías</div>
+  <p class="pp pb">7.1 Depósito de garantía</p>
+  <p class="pp">El Arrendatario entrega en este acto la suma de <span class="pb">$${fmtN(d.dep)}</span> (${depL} pesos) como depósito de garantía, valor que será devuelto dentro de los 3 días hábiles siguientes a la devolución del vehículo, previo cotejo del Acta de Entrega y verificación de que no existen daños, deudas o pendientes. Si hay daños o saldos pendientes, el depósito se imputará a cubrir dichos valores y el saldo restante será cobrado por separado.</p>
+  <p class="pp pb">7.2 Pagaré en blanco con carta de instrucciones</p>
+  <p class="pp">El Arrendatario firma en este acto un <span class="pb">Pagaré en Blanco</span> a favor de COMERCIAL INTEGRAR SERVICES (Establecimiento de Comercio, Mat. Mercantil No. 0000066552, C. de Comercio de Orito, Putumayo), acompañado de la respectiva Carta de Instrucciones, en la cual se autorizan las condiciones bajo las cuales el arrendador podrá llenarlo. El Arrendador podrá hacer efectivo el pagaré ante cualquier juez civil competente del círculo de ${ciudad} o del domicilio del Arrendatario, según lo establece el Código de Comercio colombiano.</p>
+
+  <!-- 8. ACTA ENTREGA -->
+  <div class="ps">8. Acta de Entrega y Devolución</div>
+  <p class="pp">Al momento de entrega del vehículo se diligencia un <span class="pb">Acta de Entrega Fotográfica</span> que documenta el estado del vehículo (exterior, interior, kilometraje y nivel de combustible). Este documento es anexo integral del contrato y sirve como referencia para determinar daños al momento de la devolución.</p>
+  <table class="pt">
+    <tr><td class="dl">Km entrega</td><td class="dv">${d.km||'_______'}</td><td class="dl">Combustible entrega</td><td class="dv">${d.fuel}</td></tr>
+    <tr><td class="dl">Estado exterior entrega</td><td class="dv" style="min-width:120pt;"></td><td class="dl">Estado interior entrega</td><td class="dv"></td></tr>
+    <tr><td class="dl">Km devolución</td><td class="dv"></td><td class="dl">Combustible devolución</td><td class="dv"></td></tr>
+    <tr><td class="dl">Estado exterior devolución</td><td class="dv"></td><td class="dl">Observaciones</td><td class="dv"></td></tr>
+  </table>
+
+  <!-- 9. PROHIBICIONES -->
+  <div class="ps">9. Prohibiciones Expresas</div>
+  <p class="pli">• Transportar estupefacientes, armas ilegales o mercancía de contrabando en el vehículo.</p>
+  <p class="pli">• Utilizar el vehículo para actividades delictivas, persecuciones, o situaciones que pongan en riesgo el vehículo.</p>
+  <p class="pli">• Ingresar a zonas de conflicto armado o restricción de seguridad sin autorización previa y escrita del Arrendador.</p>
+  <p class="pli">• Remolcar o empujar otros vehículos.</p>
+  <p class="pli">• Participar en competencias, pruebas de velocidad o actividades off-road extremas.</p>
+  <p class="pli">• Fumar dentro del vehículo.</p>
+  <p class="pp">El incumplimiento de cualquiera de estas prohibiciones faculta al Arrendador para dar por terminado el contrato de manera inmediata, sin reembolso del depósito ni de los días no utilizados.</p>
+
+  <!-- 10. TERMINACIÓN -->
+  <div class="ps">10. Terminación Anticipada</div>
+  <p class="pp">El Arrendador podrá dar por terminado el contrato sin previo aviso y sin lugar a reembolso en los siguientes casos:</p>
+  <p class="pli">• Incumplimiento de cualquier obligación del presente contrato.</p>
+  <p class="pli">• Uso del vehículo para actividades ilegales o prohibidas.</p>
+  <p class="pli">• No pago oportuno de la tarifa acordada.</p>
+  <p class="pli">• Reporte de siniestro sin notificación inmediata al Arrendador.</p>
+  <p class="pli">• Conducción bajo efectos de alcohol o sustancias.</p>
+  <p class="pp">El Arrendatario podrá terminar anticipadamente el contrato con mínimo 12 horas de aviso. En ese caso se descuenta el costo de los días efectivamente utilizados más un cargo administrativo equivalente al VEINTE POR CIENTO (20%) del valor total pactado.</p>
+
+  <!-- 11. JURISDICCIÓN -->
+  <div class="ps">11. Jurisdicción y Ley Aplicable</div>
+  <p class="pp">Para todos los efectos legales, las partes se someten a la jurisdicción civil ordinaria de los jueces de ${ciudad}, Colombia, y declaran que el presente contrato se rige por las normas del Código Civil y Código de Comercio de la República de Colombia, en particular los artículos relativos al contrato de arrendamiento de cosas y la responsabilidad contractual.</p>
+
+  <!-- 12. CLÁUSULA PENAL -->
+  <div class="ps">12. Cláusula Penal</div>
+  <p class="pp">En caso de incumplimiento del Arrendatario a cualquiera de las obligaciones pactadas en el presente contrato, este pagará al Arrendador, a título de pena, la suma equivalente al <span class="pb">VEINTE POR CIENTO (20%)</span> del valor total del contrato, sin perjuicio de que el Arrendador exija adicionalmente el cumplimiento del contrato y/o el pago de perjuicios adicionales debidamente probados.</p>
+
+  <!-- 13. DECLARACIONES -->
+  <div class="ps">13. Declaraciones de las Partes</div>
+  <p class="pp pb">El Arrendatario declara:</p>
+  <p class="pli">• Haber leído, entendido y aceptado la totalidad de las cláusulas del presente contrato.</p>
+  <p class="pli">• Contar con licencia de conducción vigente y categoría apropiada para conducir el vehículo arrendado.</p>
+  <p class="pli">• Estar en plenas facultades mentales y no encontrarse bajo efectos de sustancias al momento de la firma.</p>
+  <p class="pli">• Que la información suministrada es veraz y que autoriza al Arrendador a verificarla.</p>
+  <p class="pli">• Haber recibido el vehículo en las condiciones descritas en el Acta de Entrega.</p>
+
+  <!-- 14. FIRMAS -->
+  <div class="ps">14. Firmas</div>
+  <p class="pp">Las partes declaran haber leído, entendido y aceptado la totalidad de las cláusulas del presente contrato.</p>
+  <div class="fg nob">
+    <div class="fb">
+      <div class="ft">EL ARRENDADOR</div>
+      <div class="fl" style="height:44pt;"></div>
+      <div class="fd">
+        <strong>COMERCIAL INTEGRAR SERVICES</strong><br>
+        Establecimiento de Comercio<br>
+        Mat. Mercantil No. 0000066552<br>
+        ESPAÑA RUALES DARWIN ROBIN<br>
+        C.C. 1.061.733.315-3 · NIT 1.061.733.315-3<br>
+        Propietario — Representante Legal
+      </div>
+    </div>
+    <div class="fb">
+      <div class="ft">EL ARRENDATARIO</div>
+      <div class="fl" style="height:44pt;"></div>
+      <div class="fd">
+        <strong>${d.es?d.razon:d.nombre}</strong><br>
+        ${d.es?'NIT: '+d.nit+'<br>'+d.nombre+'<br>':''}
+        C.C.: ${d.cc}<br>
+        Tel: ${d.celular}
+      </div>
+    </div>
+  </div>
+  <p class="pp" style="margin-top:10pt;"><span class="pb">TESTIGO (opcional):</span></p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20pt;margin-top:6pt;">
+    <div>
+      <div style="border-bottom:1pt solid #CCC;height:36pt;margin-bottom:4pt;"></div>
+      <div style="font-size:7.5pt;color:#666;">Nombre: _____________________________ C.C.: _______________________</div>
+    </div>
+    <div></div>
+  </div>
+  <p class="pf">COMERCIAL INTEGRAR SERVICES · Mat. Mercantil 0000066552 · ESPAÑA RUALES DARWIN ROBIN · C.C. 1.061.733.315-3 · WP: 315 600 9728 · Orito, Putumayo</p>
+
+  <!-- ══ PAGARÉ EN BLANCO ══ -->
+  <div class="pb2">
+    <div class="ph">
+      <div class="ph-left"><div class="pbn">PAGARÉ EN BLANCO</div><div class="pbs">Anexo al Contrato de Arrendamiento de Vehículo — No. ${d.num||'_______'}</div></div>
+      <div class="ph-right"><span>TÍTULO<br>EJECUTIVO</span></div>
+    </div>
+    <p class="pp">Yo, <span style="border-bottom:1pt solid #999;display:inline-block;min-width:140pt;">&nbsp;${d.nombre}&nbsp;</span>, mayor de edad, identificado(a) con C.C. / NIT <span style="border-bottom:1pt solid #999;display:inline-block;min-width:80pt;">&nbsp;${d.cc}&nbsp;</span> de <span style="border-bottom:1pt solid #999;display:inline-block;min-width:60pt;">&nbsp;${d.mun}&nbsp;</span>, actuando en nombre propio, me comprometo a pagar incondicional y solidariamente a la orden de <span class="pb">COMERCIAL INTEGRAR SERVICES</span> (representada por ESPAÑA RUALES DARWIN ROBIN, C.C. 1.061.733.315), en la ciudad de ${ciudad}, la suma de <span class="pb">PESOS COLOMBIANOS ($</span><span style="border-bottom:1pt solid #999;display:inline-block;min-width:80pt;"></span><span class="pb">)</span>, equivalentes en letras a: <span style="border-bottom:1pt solid #999;display:inline-block;width:100%;"></span></p>
+    <p class="pp" style="margin-top:6pt;">El presente pagaré es en BLANCO y será diligenciado por el tenedor legítimo conforme a la Carta de Instrucciones suscrita en esta misma fecha, en los términos del artículo 622 del Código de Comercio de Colombia.</p>
+    <table class="pt" style="margin-top:8pt;">
+      <tr><td class="dl">Ciudad y fecha de firma</td><td class="dv">${ciudad}, ${hoy.getDate()} de ${MESES[hoy.getMonth()]} de ${hoy.getFullYear()}</td></tr>
+      <tr><td class="dl">Firmante (nombre)</td><td class="dv">${d.nombre}</td></tr>
+      <tr><td class="dl">C.C. / NIT</td><td class="dv">${d.cc}</td></tr>
+      <tr><td class="dl">Teléfono</td><td class="dv">${d.celular}</td></tr>
+      <tr><td class="dl">Dirección</td><td class="dv">${d.dir||'_______________'}</td></tr>
+    </table>
+    <div style="margin-top:24pt;border-bottom:1pt solid #CCC;width:200pt;"></div>
+    <p class="pp" style="margin-top:4pt;font-size:8pt;"><span class="pb">FIRMA DEL DEUDOR / ARRENDATARIO</span></p>
+  </div>
+
+  <!-- ══ CARTA DE INSTRUCCIONES ══ -->
+  <div class="pb2">
+    <div class="ph">
+      <div class="ph-left"><div class="pbn">CARTA DE INSTRUCCIONES</div><div class="pbs">Para el diligenciamiento del Pagaré en Blanco — Contrato No. ${d.num||'_______'}</div></div>
+      <div class="ph-right"><span>ANEXO<br>PAGARÉ</span></div>
+    </div>
+    <p class="pp">Ciudad y fecha: ${ciudad}, ${hoy.getDate()} de ${MESES[hoy.getMonth()]} de ${hoy.getFullYear()}</p>
+    <p class="pp" style="margin-top:6pt;">Señores: <span class="pb">COMERCIAL INTEGRAR SERVICES</span> — ESPAÑA RUALES DARWIN ROBIN</p>
+    <p class="pp" style="margin-top:8pt;">Yo, <span class="pb">${d.nombre}</span>, identificado(a) con C.C. / NIT <span class="pb">${d.cc}</span>, en mi calidad de suscriptor del pagaré en blanco entregado en esta misma fecha, AUTORIZO expresamente a COMERCIAL INTEGRAR SERVICES para diligenciar dicho pagaré en las siguientes condiciones:</p>
+    <p class="pli">• Por el valor total de los perjuicios, daños, reparaciones, costos de reposición de piezas, tarifas de arrendamiento pendientes, multas no pagadas, y cualquier otro valor adeudado derivado del Contrato de Arrendamiento de Vehículo suscrito en esta misma fecha.</p>
+    <p class="pli">• El pagaré podrá incluir intereses de mora a la tasa máxima legal permitida en Colombia desde la fecha de exigibilidad de la obligación.</p>
+    <p class="pli">• El pagaré podrá presentarse al cobro judicial ante cualquier juez civil competente del círculo de ${ciudad} o del domicilio del suscriptor, en cualquier momento posterior al incumplimiento de las obligaciones aquí referidas.</p>
+    <p class="pli">• La determinación del monto se hará con base en: (a) Acta de Entrega y devolución firmada por las partes; (b) Cotizaciones y/o facturas de reparación de talleres autorizados; (c) Multas de tránsito registradas a nombre del vehículo durante el período de arrendamiento.</p>
+    <p class="pp" style="margin-top:6pt;">Esta carta de instrucciones tiene plena validez legal conforme al artículo 622 del Código de Comercio colombiano y las sentencias de la Corte Suprema de Justicia que avalan el pagaré en blanco como título ejecutivo.</p>
+    <div style="margin-top:28pt;border-bottom:1pt solid #CCC;width:200pt;"></div>
+    <p class="pp" style="margin-top:4pt;font-size:8pt;"><span class="pb">FIRMA DEL ARRENDATARIO / SUSCRIPTOR</span></p>
+    <p class="pp" style="margin-top:8pt;">Nombre: <span style="border-bottom:1pt solid #999;display:inline-block;min-width:160pt;">&nbsp;${d.nombre}&nbsp;</span></p>
+    <p class="pp" style="margin-top:4pt;">C.C. / NIT: <span style="border-bottom:1pt solid #999;display:inline-block;min-width:100pt;">&nbsp;${d.cc}&nbsp;</span></p>
+    <p class="pp" style="margin-top:4pt;">Fecha: ${ciudad}, ${hoy.getDate()} de ${MESES[hoy.getMonth()]} de ${hoy.getFullYear()}</p>
+    <p class="pf" style="margin-top:20pt;">COMERCIAL INTEGRAR SERVICES · Mat. Mercantil 0000066552 · ESPAÑA RUALES DARWIN ROBIN · C.C. 1.061.733.315-3 · WP: 315 600 9728</p>
+  </div>
+
+  <!-- ══ DOCUMENTOS DEL ARRENDATARIO ══ -->
+  <div class="pb2">
+    <div class="ph">
+      <div class="ph-left"><div class="pbn">COMERCIAL INTEGRAR SERVICES</div><div class="pbs">Documentos del Arrendatario — Contrato No. ${d.num||'_______'}</div></div>
+      <div class="ph-right"><span>ARCHIVO DE<br>DOCUMENTOS</span></div>
+    </div>
+    <p class="pp"><span class="pb">Arrendatario:</span> ${d.nombre} &nbsp;&nbsp; <span class="pb">C.C.:</span> ${d.cc} &nbsp;&nbsp; <span class="pb">Fecha:</span> ${fmtF(d.fe)}</p>
+    <div class="doc-foto-grid">
+      ${fotoHTML(d.imgCF,'Cédula — Frente')}
+      ${fotoHTML(d.imgCR,'Cédula — Reverso')}
+      ${fotoHTML(d.imgLic,'Licencia de conducción')}
+      ${fotoHTML(d.imgSel,'Selfie con cédula')}
+    </div>
+    <p class="pf" style="margin-top:10pt;">Documentos verificados por ESPAÑA RUALES DARWIN ROBIN — COMERCIAL INTEGRAR SERVICES · ${hoy.getDate()} de ${MESES[hoy.getMonth()]} de ${hoy.getFullYear()}</p>
+  </div>
+
+`;
+
+  window.print();
+}
+
+// ── NÚMERO A LETRAS ───────────────────────────────────────────────────────────
+function n2l(n){
+  const u=['','un','dos','tres','cuatro','cinco','seis','siete','ocho','nueve','diez','once','doce','trece','catorce','quince','dieciséis','diecisiete','dieciocho','diecinueve'];
+  const d=['','','veinte','treinta','cuarenta','cincuenta','sesenta','setenta','ochenta','noventa'];
+  const c=['','ciento','doscientos','trescientos','cuatrocientos','quinientos','seiscientos','setecientos','ochocientos','novecientos'];
+  if(n===0)return'cero';
+  let r='';
+  if(n>=1000000){r+=n2l(Math.floor(n/1000000))+(Math.floor(n/1000000)===1?' millón':' millones')+' ';n%=1000000;}
+  if(n>=1000){r+=n2l(Math.floor(n/1000))+' mil ';n%=1000;}
+  if(n>=100){r+=(n===100?'cien':c[Math.floor(n/100)])+' ';n%=100;}
+  if(n>=20){r+=d[Math.floor(n/10)]+(n%10?' y '+u[n%10]:'')+' ';}
+  else if(n>0){r+=u[n]+' ';}
+  return r.trim();
+}
+
+// ── LIMPIAR ───────────────────────────────────────────────────────────────────
+function limpiar(){
+  if(!confirm('¿Limpiar todo para un nuevo arrendamiento?'))return;
+  document.querySelectorAll('input,select,textarea').forEach(e=>{
+    if(e.id==='dep'){e.value='500000';return;}
+    if(e.type==='time'){return;}
+    e.value='';
+  });
+  // Reset fotos
+  ['cf','cr','lic','sel'].forEach(k=>{
+    document.getElementById('lbl-'+k).textContent='Toca para subir foto';
+    document.getElementById('lbl-'+k).className='doc-upload-lbl';
+    document.getElementById('img-'+k).style.display='none';
+    document.getElementById('doc-'+k).value='';
+  });
+  document.getElementById('lbl-sel').textContent='Toca para tomar selfie';
+  setTipo('n'); dias=1; if(typeof setTarifa==='function') setTarifa('local');
+  ['origen','destino','uso'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  const tlv=document.getElementById('tarifa-local-val');if(tlv){tlv.value='250000';TARIFAS['local']=250000;}
+  const tnv=document.getElementById('tarifa-nacional-val');if(tnv){tnv.value='350000';TARIFAS['nacional']=350000;}
+  document.querySelectorAll('.dia-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.dia-btn').classList.add('active');
+  setFuel(document.querySelectorAll('.fuel-btn')[2],'1/2');
+  resumen(); setTab('c');
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+document.getElementById('fe').value=new Date().toISOString().split('T')[0];
+calcDev(); resumen();
+</script>
+</body>
+</html>

@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planilla Servicio Escolar — TMP118</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,Helvetica,Arial,sans-serif; background:#F0F0F0; color:#1A1A1A; padding-bottom:80px; }
+
+/* HEADER */
+.hdr { background:#0A0A0A; border-bottom:3px solid #C9A14A; padding:14px 16px; }
+.brand { color:#C9A14A; font-size:15px; font-weight:800; letter-spacing:1px; }
+.brand-sub { color:#888; font-size:10px; margin-top:2px; }
+
+/* NAVEGACIÓN MES */
+.mes-nav { background:#1A1A1A; display:flex; align-items:center; justify-content:space-between; padding:10px 16px; }
+.mes-btn { background:none; border:1.5px solid #C9A14A; color:#C9A14A; border-radius:6px; padding:8px 16px; font-size:16px; font-weight:700; cursor:pointer; min-width:44px; min-height:44px; -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
+.mes-titulo { color:#FFF; font-size:15px; font-weight:700; text-align:center; }
+
+/* SECCIONES */
+.sec { background:#FFF; border-radius:8px; margin:10px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,.08); }
+.sec-title { background:#0A0A0A; color:#C9A14A; font-size:11px; font-weight:800; letter-spacing:1.5px; padding:9px 14px; text-transform:uppercase; display:flex; justify-content:space-between; align-items:center; }
+.sec-title span { color:#888; font-size:10px; font-weight:400; letter-spacing:0; }
+
+/* CAMPOS */
+.campo { border-bottom:1px solid #F0F0F0; display:flex; align-items:center; min-height:48px; }
+.campo:last-child { border-bottom:none; }
+.campo label { font-size:11px; font-weight:700; color:#666; padding:0 12px; width:110px; min-width:110px; text-transform:uppercase; }
+.campo input { flex:1; border:none; outline:none; background:transparent; font-size:16px; color:#1A1A1A; padding:10px 12px; -webkit-appearance:none; min-height:44px; }
+
+/* DÍAS DE LA SEMANA HEADER */
+.cal-header { display:grid; grid-template-columns:repeat(7,1fr); background:#F5F5F5; border-bottom:1px solid #EEE; }
+.cal-dow { text-align:center; font-size:11px; font-weight:700; color:#888; padding:8px 2px; }
+.cal-dow.fin { color:#E74C3C; }
+
+/* GRID CALENDARIO */
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; padding:6px; background:#F0F0F0; }
+
+/* CELDA DE DÍA */
+.dia {
+  background:#FFF; border-radius:6px; padding:4px 3px;
+  cursor:pointer; min-height:64px; position:relative;
+  -webkit-tap-highlight-color:transparent; touch-action:manipulation;
+  border:1.5px solid transparent;
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+}
+.dia.vacio { background:#F5F5F5; cursor:default; }
+.dia.sin-servicio { background:#FEF3F2; border-color:#E74C3C; }
+.dia.con-servicio { border-color:#C9A14A; background:#FFFBF0; }
+.dia.festivo { background:#F0F8FF; border-color:#3498DB; }
+
+.dia-num { font-size:13px; font-weight:800; color:#1A1A1A; }
+.dia.vacio .dia-num { color:#CCC; }
+.dia.fin-semana .dia-num { color:#E74C3C; }
+
+/* CHIPS DE COLEGIO */
+.chips { display:flex; flex-direction:column; gap:1px; width:100%; }
+.chip {
+  font-size:8px; font-weight:700; text-align:center;
+  border-radius:3px; padding:1px 2px; line-height:1.3;
+}
+.chip.sj  { background:#E8F5E9; color:#2E7D32; }
+.chip.gm  { background:#E3F2FD; color:#1565C0; }
+.chip.je  { background:#FFF3E0; color:#E65100; }
+.chip.ns  { background:#FEEEEE; color:#C62828; font-size:7px; }
+.chip.fest { background:#E3F0FF; color:#1A5276; font-size:7px; }
+
+/* MODAL */
+.overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:200; }
+.overlay.visible { display:flex; align-items:flex-end; justify-content:center; }
+.modal { background:#FFF; border-radius:12px 12px 0 0; width:100%; max-width:500px; padding:20px 16px 30px; }
+.modal-titulo { font-size:16px; font-weight:800; color:#1A1A1A; margin-bottom:4px; }
+.modal-sub { font-size:12px; color:#888; margin-bottom:16px; }
+
+/* OPCIONES DEL MODAL */
+.opcion { display:flex; align-items:center; justify-content:space-between; padding:14px 0; border-bottom:1px solid #F0F0F0; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.opcion:last-of-type { border-bottom:none; }
+.opcion-info { display:flex; align-items:center; gap:10px; }
+.opcion-color { width:14px; height:14px; border-radius:3px; }
+.opcion-nombre { font-size:15px; font-weight:600; color:#1A1A1A; }
+.toggle {
+  width:44px; height:26px; border-radius:13px; background:#DDD;
+  position:relative; transition:background .2s; flex-shrink:0;
+}
+.toggle.on { background:#C9A14A; }
+.toggle::after {
+  content:''; position:absolute; top:3px; left:3px;
+  width:20px; height:20px; border-radius:50%; background:#FFF;
+  transition:left .2s; box-shadow:0 1px 3px rgba(0,0,0,.2);
+}
+.toggle.on::after { left:21px; }
+
+.opcion-sin { margin-top:8px; }
+.btn-sin { width:100%; padding:12px; border-radius:8px; border:1.5px solid #E74C3C; background:#FFF; color:#E74C3C; font-size:14px; font-weight:700; cursor:pointer; min-height:44px; -webkit-tap-highlight-color:transparent; }
+.btn-sin.activo { background:#E74C3C; color:#FFF; }
+.btn-festivo { width:100%; padding:12px; border-radius:8px; border:1.5px solid #3498DB; background:#FFF; color:#3498DB; font-size:14px; font-weight:700; cursor:pointer; min-height:44px; margin-top:6px; -webkit-tap-highlight-color:transparent; }
+.btn-festivo.activo { background:#3498DB; color:#FFF; }
+.btn-limpiar { width:100%; padding:12px; border-radius:8px; border:1.5px solid #999; background:#FFF; color:#666; font-size:14px; font-weight:700; cursor:pointer; min-height:44px; margin-top:6px; -webkit-tap-highlight-color:transparent; }
+.btn-cerrar { width:100%; padding:14px; border-radius:8px; background:#0A0A0A; color:#FFF; font-size:15px; font-weight:800; cursor:pointer; min-height:48px; margin-top:14px; -webkit-tap-highlight-color:transparent; }
+
+/* RESUMEN */
+.resumen-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:#F0F0F0; }
+.res-item { background:#FFF; padding:14px; text-align:center; }
+.res-num { font-size:28px; font-weight:800; color:#C9A14A; }
+.res-lbl { font-size:11px; color:#888; margin-top:2px; font-weight:600; text-transform:uppercase; }
+.res-item.sj .res-num { color:#2E7D32; }
+.res-item.gm .res-num { color:#1565C0; }
+.res-item.je .res-num { color:#E65100; }
+.res-item.ns .res-num { color:#E74C3C; }
+.res-item.total .res-num { color:#C9A14A; }
+
+/* DETALLE COBRO */
+.cobro-row { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; border-bottom:1px solid #F0F0F0; font-size:13px; }
+.cobro-row:last-child { border-bottom:none; }
+.cobro-row .lbl { color:#666; }
+.cobro-row .val { font-weight:700; color:#1A1A1A; }
+.cobro-row.total { background:#0A0A0A; }
+.cobro-row.total .lbl { color:#C9A14A; font-weight:700; }
+.cobro-row.total .val { color:#C9A14A; font-size:16px; }
+.tarifa-input { border:none; border-bottom:1px solid #DDD; outline:none; font-size:16px; font-weight:700; color:#1A1A1A; text-align:right; width:100px; background:transparent; -webkit-appearance:none; padding:2px 0; }
+
+/* LEYENDA */
+.leyenda { display:flex; flex-wrap:wrap; gap:8px; padding:12px 14px; }
+.ley-item { display:flex; align-items:center; gap:5px; font-size:11px; color:#666; }
+.ley-dot { width:12px; height:12px; border-radius:2px; }
+
+/* FOOTER */
+.footer { position:fixed; bottom:0; left:0; right:0; background:#0A0A0A; padding:10px 16px; border-top:3px solid #C9A14A; display:flex; gap:10px; z-index:100; }
+.btn-imprimir { flex:1; background:#C9A14A; color:#0A0A0A; border:none; border-radius:8px; padding:13px; font-size:14px; font-weight:800; cursor:pointer; min-height:48px; -webkit-tap-highlight-color:transparent; }
+.btn-export { background:transparent; color:#C9A14A; border:1.5px solid #C9A14A; border-radius:8px; padding:13px 14px; font-size:13px; font-weight:700; cursor:pointer; min-height:48px; -webkit-tap-highlight-color:transparent; }
+
+@media print {
+  /* Ocultar todo excepto el documento de impresión */
+  body > *:not(#doc-print) { display:none !important; }
+  #doc-print { display:block !important; }
+  * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  @page { size:A4; margin:1.5cm 1.8cm; }
+
+  /* ESTILOS DEL DOCUMENTO IMPRIMIBLE */
+  .p-header { display:flex; justify-content:space-between; margin-bottom:14pt; border-bottom:2pt solid #C9A14A; }
+  .p-brand { background:#0A0A0A; padding:10pt 14pt; flex:1; }
+  .p-brand-name { color:#C9A14A; font-size:13pt; font-weight:800; letter-spacing:1px; }
+  .p-brand-sub { color:#999; font-size:8pt; margin-top:2pt; }
+  .p-badge { background:#C9A14A; padding:10pt 14pt; display:flex; flex-direction:column; justify-content:center; text-align:center; min-width:90pt; }
+  .p-badge span { font-size:9pt; font-weight:800; color:#0A0A0A; line-height:1.4; }
+
+  .p-section { font-size:9pt; font-weight:800; color:#C9A14A; letter-spacing:1pt; text-transform:uppercase; margin:10pt 0 5pt; border-bottom:1pt solid #C9A14A; padding-bottom:2pt; }
+  .p-p { font-size:8.5pt; color:#444; line-height:1.6; margin-bottom:4pt; }
+  .p-bold { font-weight:700; color:#1A1A1A; }
+
+  .p-datos { width:100%; border-collapse:collapse; font-size:8.5pt; margin-bottom:8pt; }
+  .p-datos td { padding:4pt 6pt; border:.5pt solid #DDD; }
+  .p-datos .dl { background:#F5F5F5; font-weight:700; color:#333; width:25%; }
+
+  /* CALENDARIO IMPRIMIBLE */
+  .p-cal { width:100%; border-collapse:collapse; margin-bottom:8pt; font-size:7.5pt; }
+  .p-cal th { background:#0A0A0A; color:#C9A14A; font-weight:800; text-align:center; padding:4pt 2pt; }
+  .p-cal th.fin { color:#E74C3C; }
+  .p-cal td { border:.5pt solid #DDD; padding:3pt 2pt; text-align:center; vertical-align:top; min-height:30pt; width:14.28%; }
+  .p-cal td.vacio { background:#FAFAFA; }
+  .p-cal td.fin-sem { background:#FFF9F9; }
+  .p-cal td.c-serv { background:#FFFBF0; border-color:#C9A14A; }
+  .p-cal td.c-ns { background:#FEF3F2; border-color:#E74C3C; }
+  .p-cal td.c-fest { background:#EEF6FF; border-color:#3498DB; }
+  .p-cal .p-dnum { font-weight:800; font-size:8pt; display:block; margin-bottom:2pt; }
+  .p-cal .p-chip { font-size:5.5pt; font-weight:700; border-radius:2pt; padding:1pt 2pt; display:block; margin:1pt 0; }
+  .p-cal .ch-sj { background:#C8E6C9; color:#1B5E20; }
+  .p-cal .ch-gm { background:#BBDEFB; color:#0D47A1; }
+  .p-cal .ch-je { background:#FFE0B2; color:#BF360C; }
+  .p-cal .ch-ns { background:#FFCDD2; color:#B71C1C; }
+  .p-cal .ch-fest { background:#BBDEFB; color:#0D47A1; }
+
+  /* RESUMEN */
+  .p-res { width:100%; border-collapse:collapse; font-size:8.5pt; margin-bottom:8pt; }
+  .p-res td { padding:5pt 7pt; border:.5pt solid #DDD; }
+  .p-res .rh { background:#F5F5F5; font-weight:700; color:#333; }
+  .p-res .rv { font-weight:800; color:#1A1A1A; text-align:center; }
+  .p-res .r-sj { color:#2E7D32; }
+  .p-res .r-gm { color:#1565C0; }
+  .p-res .r-je { color:#E65100; }
+  .p-res .r-ns { color:#C62828; }
+  .p-res .r-tot { color:#C9A14A; font-size:11pt; }
+
+  /* COBRO */
+  .p-cobro { width:100%; border-collapse:collapse; font-size:8.5pt; margin-bottom:8pt; }
+  .p-cobro td { padding:4pt 7pt; border:.5pt solid #DDD; }
+  .p-cobro .cl { background:#F5F5F5; font-weight:700; color:#333; }
+  .p-cobro .cv { text-align:right; font-weight:600; }
+  .p-cobro .ctot { background:#0A0A0A; }
+  .p-cobro .ctot td { color:#C9A14A; font-weight:800; font-size:10pt; }
+
+  /* FIRMAS */
+  .p-firmas { display:grid; grid-template-columns:1fr 1fr; gap:20pt; margin-top:10pt; }
+  .p-firma .ft { color:#C9A14A; font-size:8pt; font-weight:800; letter-spacing:1pt; margin-bottom:18pt; }
+  .p-firma .fl { border-bottom:1pt solid #CCC; margin-bottom:5pt; height:30pt; }
+  .p-firma .fd { font-size:7.5pt; color:#666; line-height:1.8; }
+  .p-firma .fd strong { color:#1A1A1A; }
+
+  .p-footer { font-size:6.5pt; color:#AAA; text-align:center; margin-top:14pt; border-top:.5pt solid #DDD; padding-top:5pt; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="brand">PLANILLA SERVICIO ESCOLAR</div>
+  <div class="brand-sub">Ruta Naranjito — NPR Reward 2013 — TMP118</div>
+  <div class="brand-sub" id="sync-status" style="color:#C9A14A;font-size:10px;margin-top:2px;"></div>
+</div>
+
+<!-- NAVEGACIÓN MES -->
+<div class="mes-nav">
+  <button class="mes-btn" onclick="cambiarMes(-1)">‹</button>
+  <div class="mes-titulo" id="mes-titulo">—</div>
+  <button class="mes-btn" onclick="cambiarMes(1)">›</button>
+</div>
+
+<!-- DATOS DEL SERVICIO -->
+<div class="sec">
+  <div class="sec-title">Datos del Servicio</div>
+  <div class="campo"><label>Conductor</label><input type="text" id="conductor" value="Olmedo España" placeholder="Nombre conductor"></div>
+  <div class="campo"><label>Monitora</label><input type="text" id="monitora" value="Nubia Ruales" placeholder="Nombre monitora"></div>
+  <div class="campo"><label>Vehículo</label><input type="text" id="vehiculo" value="NPR Reward 2013 — TMP118" placeholder="Vehículo y placa"></div>
+  <div class="campo"><label>Ruta</label><input type="text" id="ruta" value="Naranjito" placeholder="Nombre de la ruta"></div>
+</div>
+
+<!-- LEYENDA -->
+<div class="sec">
+  <div class="sec-title">Leyenda</div>
+  <div class="leyenda">
+    <div class="ley-item"><div class="ley-dot" style="background:#C8E6C9;border:1px solid #2E7D32;"></div> San José</div>
+    <div class="ley-item"><div class="ley-dot" style="background:#BBDEFB;border:1px solid #1565C0;"></div> Gabriela Mistral</div>
+    <div class="ley-item"><div class="ley-dot" style="background:#FFE0B2;border:1px solid #E65100;"></div> Jorge Eliécer</div>
+    <div class="ley-item"><div class="ley-dot" style="background:#FFCDD2;border:1px solid #C62828;"></div> Sin servicio</div>
+    <div class="ley-item"><div class="ley-dot" style="background:#BBDEFB;border:1px solid #1565C0;"></div> Festivo</div>
+  </div>
+</div>
+
+<!-- CALENDARIO -->
+<div class="sec">
+  <div class="sec-title">Calendario <span>Toca un día para marcarlo</span></div>
+  <div class="cal-header">
+    <div class="cal-dow fin">Dom</div>
+    <div class="cal-dow">Lun</div>
+    <div class="cal-dow">Mar</div>
+    <div class="cal-dow">Mié</div>
+    <div class="cal-dow">Jue</div>
+    <div class="cal-dow">Vie</div>
+    <div class="cal-dow fin">Sáb</div>
+  </div>
+  <div class="cal-grid" id="cal-grid"></div>
+</div>
+
+<!-- RESUMEN -->
+<div class="sec">
+  <div class="sec-title">Resumen del Mes</div>
+  <div class="resumen-grid">
+    <div class="res-item sj"><div class="res-num" id="r-sj">0</div><div class="res-lbl">San José</div></div>
+    <div class="res-item gm"><div class="res-num" id="r-gm">0</div><div class="res-lbl">Gabriela Mistral</div></div>
+    <div class="res-item je"><div class="res-num" id="r-je">0</div><div class="res-lbl">Jorge Eliécer</div></div>
+    <div class="res-item ns"><div class="res-num" id="r-ns">0</div><div class="res-lbl">Sin servicio</div></div>
+    <div class="res-item total" style="grid-column:span 2;"><div class="res-num" id="r-tot">0</div><div class="res-lbl" style="color:#C9A14A;">Días con servicio</div></div>
+  </div>
+</div>
+
+<!-- COBRO -->
+<div class="sec">
+  <div class="sec-title">Control de Cobro</div>
+  <div class="cobro-row">
+    <span class="lbl">Tarifa diaria San José</span>
+    <input class="tarifa-input" type="number" id="t-sj" value="0" inputmode="numeric" onchange="calcCobro()">
+  </div>
+  <div class="cobro-row">
+    <span class="lbl">Tarifa diaria Gabriela Mistral</span>
+    <input class="tarifa-input" type="number" id="t-gm" value="0" inputmode="numeric" onchange="calcCobro()">
+  </div>
+  <div class="cobro-row">
+    <span class="lbl">Tarifa diaria Jorge Eliécer</span>
+    <input class="tarifa-input" type="number" id="t-je" value="0" inputmode="numeric" onchange="calcCobro()">
+  </div>
+  <div class="cobro-row"><span class="lbl">Días San José × tarifa</span><span class="val" id="c-sj">$0</span></div>
+  <div class="cobro-row"><span class="lbl">Días Gabriela Mistral × tarifa</span><span class="val" id="c-gm">$0</span></div>
+  <div class="cobro-row"><span class="lbl">Días Jorge Eliécer × tarifa</span><span class="val" id="c-je">$0</span></div>
+  <div class="cobro-row total"><span class="lbl">TOTAL A COBRAR</span><span class="val" id="c-tot">$0</span></div>
+</div>
+
+<!-- OBSERVACIONES -->
+<div class="sec">
+  <div class="sec-title">Observaciones del Mes</div>
+  <textarea id="obs" placeholder="Anota novedades del mes: paros, festivos, cambios de ruta..."
+    style="width:100%;min-height:80px;border:none;outline:none;padding:14px;font-size:16px;font-family:inherit;resize:vertical;-webkit-appearance:none;background:transparent;"></textarea>
+</div>
+
+<!-- DOCUMENTO IMPRIMIBLE -->
+<div id="doc-print" style="display:none;"></div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <button class="btn-export" onclick="exportarResumen()">📋 Resumen</button>
+  <button class="btn-imprimir" onclick="generarImpresion()">🖨 Imprimir / PDF</button>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="cerrarModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-titulo" id="modal-titulo">—</div>
+    <div class="modal-sub">Selecciona los colegios que se movilizaron</div>
+
+    <div class="opcion" onclick="toggleColegio('sj')">
+      <div class="opcion-info">
+        <div class="opcion-color" style="background:#C8E6C9;border:1px solid #2E7D32;"></div>
+        <span class="opcion-nombre">San José</span>
+      </div>
+      <div class="toggle" id="tog-sj"></div>
+    </div>
+
+    <div class="opcion" onclick="toggleColegio('gm')">
+      <div class="opcion-info">
+        <div class="opcion-color" style="background:#BBDEFB;border:1px solid #1565C0;"></div>
+        <span class="opcion-nombre">Gabriela Mistral</span>
+      </div>
+      <div class="toggle" id="tog-gm"></div>
+    </div>
+
+    <div class="opcion" onclick="toggleColegio('je')">
+      <div class="opcion-info">
+        <div class="opcion-color" style="background:#FFE0B2;border:1px solid #E65100;"></div>
+        <span class="opcion-nombre">Jorge Eliécer</span>
+      </div>
+      <div class="toggle" id="tog-je"></div>
+    </div>
+
+    <div class="opcion-sin">
+      <button class="btn-sin" id="btn-sin" onclick="toggleSinServicio()">🚫 Sin servicio este día</button>
+      <button class="btn-festivo" id="btn-festivo" onclick="toggleFestivo()">🎉 Festivo / Vacaciones</button>
+      <button class="btn-limpiar" onclick="limpiarDia()">✕ Limpiar día</button>
+    </div>
+
+    <button class="btn-cerrar" onclick="cerrarModal()">Guardar y cerrar</button>
+  </div>
+</div>
+
+<script>
+// ── ESTADO ───────────────────────────────────────────────────────────────────
+var mesActual = new Date().getMonth();
+var anioActual = new Date().getFullYear();
+var datos = {}; // datos[anio][mes][dia] = {sj, gm, je, sinServicio, festivo}
+var diaSeleccionado = null;
+
+var MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+             'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+// ── PERSISTENCIA GOOGLE SHEETS ───────────────────────────────────────────────
+var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzNjQAZdru-blQYYingLSgCflJ8GoLaRHr1168Jh3qd2pvHZtuuURf27VWuVvm9z0br/exec';
+var guardandoQueue = {};
+var cargando = false;
+
+function guardarDia(dia) {
+  var key = clave(anioActual, mesActual, dia);
+  var val = JSON.stringify(datos[key] || {});
+  var url = SCRIPT_URL +
+    '?action=set&anio=' + anioActual +
+    '&mes=' + (mesActual + 1) +
+    '&dia=' + dia +
+    '&val=' + encodeURIComponent(val) +
+    '&callback=_cb_' + dia;
+
+  // Crear script tag para JSONP (funciona en iOS/Android sin CORS)
+  var s = document.createElement('script');
+  s.src = url;
+  s.id = 'jsonp-' + dia;
+  window['_cb_' + dia] = function(resp) {
+    var old = document.getElementById('jsonp-' + dia);
+    if (old) old.parentNode.removeChild(old);
+    mostrarEstado(resp.ok ? '✓ Guardado' : '⚠ Error al guardar');
+  };
+  document.head.appendChild(s);
+
+  // Backup local también
+  try { localStorage.setItem('planilla_tmp118', JSON.stringify(datos)); } catch(e){}
+}
+
+function guardar() {
+  // Solo guarda localmente (llamada genérica)
+  try { localStorage.setItem('planilla_tmp118', JSON.stringify(datos)); } catch(e){}
+}
+
+function cargar() {
+  // 1. Cargar del localStorage primero (respuesta inmediata)
+  try {
+    var d = localStorage.getItem('planilla_tmp118');
+    if (d) datos = JSON.parse(d);
+  } catch(e) {}
+
+  // 2. Luego sincronizar desde Sheets
+  sincronizarDesdeSheets();
+}
+
+function sincronizarDesdeSheets() {
+  if (cargando) return;
+  cargando = true;
+  mostrarEstado('⏳ Cargando...');
+
+  var cbName = '_cb_load_' + Date.now();
+  var url = SCRIPT_URL +
+    '?action=get&anio=' + anioActual +
+    '&mes=' + (mesActual + 1) +
+    '&callback=' + cbName;
+
+  var s = document.createElement('script');
+  s.src = url;
+  window[cbName] = function(resp) {
+    cargando = false;
+    var old = document.querySelector('script[src*="action=get"]');
+    if (old) old.parentNode.removeChild(old);
+    if (resp.ok && resp.data) {
+      // Mezclar datos de Sheets con los locales
+      Object.keys(resp.data).forEach(function(k) {
+        datos[k] = resp.data[k];
+      });
+      // Actualizar localStorage
+      try { localStorage.setItem('planilla_tmp118', JSON.stringify(datos)); } catch(e){}
+      renderCalendario();
+      actualizarResumen();
+      mostrarEstado('✓ Sincronizado');
+    } else {
+      mostrarEstado('⚠ Sin conexión — datos locales');
+    }
+    setTimeout(function(){ mostrarEstado(''); }, 3000);
+  };
+  document.head.appendChild(s);
+}
+
+function mostrarEstado(msg) {
+  var el = document.getElementById('sync-status');
+  if (el) el.textContent = msg;
+}
+
+// ── CLAVE ────────────────────────────────────────────────────────────────────
+function clave(anio, mes, dia) { return anio + '-' + mes + '-' + dia; }
+function getDia(dia) { return datos[clave(anioActual, mesActual, dia)] || {}; }
+function setDia(dia, obj) {
+  datos[clave(anioActual, mesActual, dia)] = obj;
+  guardar();
+  guardarDia(dia); // Guardar en Google Sheets
+}
+
+// ── NAVEGACIÓN MES ────────────────────────────────────────────────────────────
+function cambiarMes(delta) {
+  mesActual += delta;
+  if (mesActual > 11) { mesActual = 0; anioActual++; }
+  if (mesActual < 0)  { mesActual = 11; anioActual--; }
+  cargando = false; // reset
+  renderCalendario();
+  actualizarResumen();
+  sincronizarDesdeSheets();
+}
+
+// ── RENDER CALENDARIO ─────────────────────────────────────────────────────────
+function renderCalendario() {
+  document.getElementById('mes-titulo').textContent = MESES[mesActual] + ' ' + anioActual;
+  var grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+
+  var primerDia = new Date(anioActual, mesActual, 1).getDay();
+  var diasEnMes = new Date(anioActual, mesActual + 1, 0).getDate();
+
+  // Celdas vacías al inicio
+  for (var i = 0; i < primerDia; i++) {
+    var v = document.createElement('div');
+    v.className = 'dia vacio';
+    v.innerHTML = '<span class="dia-num"></span>';
+    grid.appendChild(v);
+  }
+
+  for (var d = 1; d <= diasEnMes; d++) {
+    (function(dia) {
+      var celda = document.createElement('div');
+      var diaSemana = new Date(anioActual, mesActual, dia).getDay();
+      var esFin = diaSemana === 0 || diaSemana === 6;
+
+      celda.className = 'dia' + (esFin ? ' fin-semana' : '');
+      celda.id = 'dia-' + dia;
+      celda.addEventListener('click', function() { abrirModal(dia); });
+
+      renderDia(celda, dia);
+      grid.appendChild(celda);
+    })(d);
+  }
+}
+
+function renderDia(celda, dia) {
+  var d = getDia(dia);
+  celda.innerHTML = '';
+
+  var num = document.createElement('span');
+  num.className = 'dia-num';
+  num.textContent = dia;
+  celda.appendChild(num);
+
+  var chips = document.createElement('div');
+  chips.className = 'chips';
+
+  if (d.festivo) {
+    celda.className = celda.className.replace(' festivo','').replace(' sin-servicio','').replace(' con-servicio','') + ' festivo';
+    var c = document.createElement('div');
+    c.className = 'chip fest'; c.textContent = 'Festivo';
+    chips.appendChild(c);
+  } else if (d.sinServicio) {
+    celda.className = celda.className.replace(' festivo','').replace(' con-servicio','').replace(' sin-servicio','') + ' sin-servicio';
+    var c = document.createElement('div');
+    c.className = 'chip ns'; c.textContent = 'Sin serv.';
+    chips.appendChild(c);
+  } else {
+    var tiene = d.sj || d.gm || d.je;
+    celda.className = celda.className.replace(' festivo','').replace(' sin-servicio','').replace(' con-servicio','') + (tiene ? ' con-servicio' : '');
+    if (d.sj) { var c = document.createElement('div'); c.className='chip sj'; c.textContent='S. José'; chips.appendChild(c); }
+    if (d.gm) { var c = document.createElement('div'); c.className='chip gm'; c.textContent='G. Mistral'; chips.appendChild(c); }
+    if (d.je) { var c = document.createElement('div'); c.className='chip je'; c.textContent='J. Eliécer'; chips.appendChild(c); }
+  }
+
+  celda.appendChild(chips);
+}
+
+// ── MODAL ────────────────────────────────────────────────────────────────────
+function abrirModal(dia) {
+  diaSeleccionado = dia;
+  var fecha = new Date(anioActual, mesActual, dia);
+  var dias = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  document.getElementById('modal-titulo').textContent =
+    dias[fecha.getDay()] + ' ' + dia + ' de ' + MESES[mesActual];
+
+  var d = getDia(dia);
+  document.getElementById('tog-sj').className = 'toggle' + (d.sj ? ' on' : '');
+  document.getElementById('tog-gm').className = 'toggle' + (d.gm ? ' on' : '');
+  document.getElementById('tog-je').className = 'toggle' + (d.je ? ' on' : '');
+  document.getElementById('btn-sin').className = 'btn-sin' + (d.sinServicio ? ' activo' : '');
+  document.getElementById('btn-festivo').className = 'btn-festivo' + (d.festivo ? ' activo' : '');
+
+  document.getElementById('overlay').className = 'overlay visible';
+}
+
+function cerrarModal(e) {
+  if (e && e.target !== document.getElementById('overlay')) return;
+  document.getElementById('overlay').className = 'overlay';
+  if (diaSeleccionado) {
+    var celda = document.getElementById('dia-' + diaSeleccionado);
+    if (celda) renderDia(celda, diaSeleccionado);
+  }
+  actualizarResumen();
+  diaSeleccionado = null;
+}
+
+function toggleColegio(col) {
+  if (!diaSeleccionado) return;
+  var d = getDia(diaSeleccionado);
+  if (d.sinServicio || d.festivo) return; // no marcar colegio si sin servicio o festivo
+  d[col] = !d[col];
+  setDia(diaSeleccionado, d);
+  document.getElementById('tog-' + col).className = 'toggle' + (d[col] ? ' on' : '');
+}
+
+function toggleSinServicio() {
+  if (!diaSeleccionado) return;
+  var d = getDia(diaSeleccionado);
+  d.sinServicio = !d.sinServicio;
+  if (d.sinServicio) { d.sj = false; d.gm = false; d.je = false; d.festivo = false; }
+  setDia(diaSeleccionado, d);
+  document.getElementById('tog-sj').className = 'toggle';
+  document.getElementById('tog-gm').className = 'toggle';
+  document.getElementById('tog-je').className = 'toggle';
+  document.getElementById('btn-sin').className = 'btn-sin' + (d.sinServicio ? ' activo' : '');
+  document.getElementById('btn-festivo').className = 'btn-festivo';
+}
+
+function toggleFestivo() {
+  if (!diaSeleccionado) return;
+  var d = getDia(diaSeleccionado);
+  d.festivo = !d.festivo;
+  if (d.festivo) { d.sj = false; d.gm = false; d.je = false; d.sinServicio = false; }
+  setDia(diaSeleccionado, d);
+  document.getElementById('tog-sj').className = 'toggle';
+  document.getElementById('tog-gm').className = 'toggle';
+  document.getElementById('tog-je').className = 'toggle';
+  document.getElementById('btn-festivo').className = 'btn-festivo' + (d.festivo ? ' activo' : '');
+  document.getElementById('btn-sin').className = 'btn-sin';
+}
+
+function limpiarDia() {
+  if (!diaSeleccionado) return;
+  setDia(diaSeleccionado, {});
+  document.getElementById('tog-sj').className = 'toggle';
+  document.getElementById('tog-gm').className = 'toggle';
+  document.getElementById('tog-je').className = 'toggle';
+  document.getElementById('btn-sin').className = 'btn-sin';
+  document.getElementById('btn-festivo').className = 'btn-festivo';
+}
+
+// ── RESUMEN ──────────────────────────────────────────────────────────────────
+function actualizarResumen() {
+  var diasEnMes = new Date(anioActual, mesActual + 1, 0).getDate();
+  var sj = 0, gm = 0, je = 0, ns = 0, tot = 0;
+
+  for (var d = 1; d <= diasEnMes; d++) {
+    var dia = getDia(d);
+    if (dia.sj) sj++;
+    if (dia.gm) gm++;
+    if (dia.je) je++;
+    if (dia.sinServicio) ns++;
+    if (dia.sj || dia.gm || dia.je) tot++;
+  }
+
+  document.getElementById('r-sj').textContent = sj;
+  document.getElementById('r-gm').textContent = gm;
+  document.getElementById('r-je').textContent = je;
+  document.getElementById('r-ns').textContent = ns;
+  document.getElementById('r-tot').textContent = tot;
+
+  // Guardar para cobro
+  window._res = {sj, gm, je, ns, tot};
+  calcCobro();
+}
+
+function calcCobro() {
+  if (!window._res) return;
+  var tsj = parseInt(document.getElementById('t-sj').value) || 0;
+  var tgm = parseInt(document.getElementById('t-gm').value) || 0;
+  var tje = parseInt(document.getElementById('t-je').value) || 0;
+  var r = window._res;
+  var csj = r.sj * tsj;
+  var cgm = r.gm * tgm;
+  var cje = r.je * tje;
+  var ctot = csj + cgm + cje;
+
+  var fmt = function(n) { return '$' + n.toLocaleString('es-CO'); };
+  document.getElementById('c-sj').textContent  = fmt(csj);
+  document.getElementById('c-gm').textContent  = fmt(cgm);
+  document.getElementById('c-je').textContent  = fmt(cje);
+  document.getElementById('c-tot').textContent = fmt(ctot);
+}
+
+// ── EXPORTAR RESUMEN (texto para WhatsApp) ────────────────────────────────────
+function exportarResumen() {
+  if (!window._res) return;
+  var r = window._res;
+  var tsj = parseInt(document.getElementById('t-sj').value) || 0;
+  var tgm = parseInt(document.getElementById('t-gm').value) || 0;
+  var tje = parseInt(document.getElementById('t-je').value) || 0;
+  var fmt = function(n) { return '$' + n.toLocaleString('es-CO'); };
+
+  var texto =
+    '📋 *PLANILLA SERVICIO ESCOLAR*\n' +
+    '*' + MESES[mesActual] + ' ' + anioActual + '*\n' +
+    'Ruta: ' + (document.getElementById('ruta').value || 'Naranjito') + '\n' +
+    'Conductor: ' + (document.getElementById('conductor').value || '') + '\n' +
+    'Vehículo: ' + (document.getElementById('vehiculo').value || 'TMP118') + '\n\n' +
+    '🏫 *Días por colegio:*\n' +
+    '• San José: ' + r.sj + ' días — ' + fmt(r.sj * tsj) + '\n' +
+    '• Gabriela Mistral: ' + r.gm + ' días — ' + fmt(r.gm * tgm) + '\n' +
+    '• Jorge Eliécer: ' + r.je + ' días — ' + fmt(r.je * tje) + '\n' +
+    '• Sin servicio: ' + r.ns + ' días\n\n' +
+    '💰 *TOTAL A COBRAR: ' + fmt(r.sj*tsj + r.gm*tgm + r.je*tje) + '*';
+
+  var obs = document.getElementById('obs').value;
+  if (obs) texto += '\n\n📝 ' + obs;
+
+  if (navigator.share) {
+    navigator.share({ text: texto });
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(texto).then(function() {
+      alert('Resumen copiado. Pégalo en WhatsApp.');
+    });
+  } else {
+    alert(texto);
+  }
+}
+
+// ── GENERAR IMPRESIÓN ────────────────────────────────────────────────────────
+function generarImpresion() {
+  var diasEnMes = new Date(anioActual, mesActual + 1, 0).getDate();
+  var conductor = document.getElementById('conductor').value || 'Olmedo España';
+  var monitora  = document.getElementById('monitora').value  || 'Nubia Ruales';
+  var vehiculo  = document.getElementById('vehiculo').value  || 'NPR Reward 2013 — TMP118';
+  var ruta      = document.getElementById('ruta').value      || 'Naranjito';
+  var obs       = document.getElementById('obs').value       || '';
+  var tsj = parseInt(document.getElementById('t-sj').value) || 0;
+  var tgm = parseInt(document.getElementById('t-gm').value) || 0;
+  var tje = parseInt(document.getElementById('t-je').value) || 0;
+
+  var r = window._res || {sj:0, gm:0, je:0, ns:0, tot:0};
+  var fmt = function(n) { return '$' + n.toLocaleString('es-CO'); };
+  var csj = r.sj * tsj, cgm = r.gm * tgm, cje = r.je * tje;
+  var ctot = csj + cgm + cje;
+
+  // ── CALENDARIO HTML ────────────────────────────────────────────────────────
+  var primerDia = new Date(anioActual, mesActual, 1).getDay();
+  var cal = '<table class="p-cal"><thead><tr>';
+  var dows = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  dows.forEach(function(d,i){ cal += '<th'+(i===0||i===6?' class="fin"':'')+'>'+d+'</th>'; });
+  cal += '</tr></thead><tbody><tr>';
+
+  // Celdas vacías
+  for (var v = 0; v < primerDia; v++) cal += '<td class="vacio"></td>';
+
+  var col = primerDia;
+  for (var d = 1; d <= diasEnMes; d++) {
+    var ds = new Date(anioActual, mesActual, d).getDay();
+    var esFin = ds === 0 || ds === 6;
+    var dia = getDia(d);
+    var cls = 'p-cal ';
+    if (esFin) cls += 'fin-sem ';
+    if (dia.festivo) cls += 'c-fest';
+    else if (dia.sinServicio) cls += 'c-ns';
+    else if (dia.sj || dia.gm || dia.je) cls += 'c-serv';
+
+    cal += '<td class="'+cls+'">';
+    cal += '<span class="p-dnum">'+d+'</span>';
+    if (dia.festivo)     cal += '<span class="p-chip ch-fest">Festivo</span>';
+    else if (dia.sinServicio) cal += '<span class="p-chip ch-ns">Sin serv.</span>';
+    else {
+      if (dia.sj) cal += '<span class="p-chip ch-sj">S.José</span>';
+      if (dia.gm) cal += '<span class="p-chip ch-gm">G.Mistral</span>';
+      if (dia.je) cal += '<span class="p-chip ch-je">J.Eliécer</span>';
+    }
+    cal += '</td>';
+
+    col++;
+    if (col % 7 === 0 && d < diasEnMes) cal += '</tr><tr>';
+  }
+  // Rellenar última fila
+  while (col % 7 !== 0) { cal += '<td class="vacio"></td>'; col++; }
+  cal += '</tr></tbody></table>';
+
+  // ── CONSTRUIR DOCUMENTO ────────────────────────────────────────────────────
+  var html = '  <div class="p-header">    <div class="p-brand">      <div class="p-brand-name">PLANILLA SERVICIO ESCOLAR</div>      <div class="p-brand-sub">Control mensual de rutas y cobro</div>    </div>    <div class="p-badge"><span>'+MESES[mesActual].toUpperCase()+'<br>'+anioActual+'</span></div>  </div>    <div class="p-section">Datos del Servicio</div>  <table class="p-datos">    <tr><td class="dl">Conductor</td><td>'+conductor+'</td><td class="dl">Monitora</td><td>'+monitora+'</td></tr>    <tr><td class="dl">Vehículo / Placa</td><td>'+vehiculo+'</td><td class="dl">Ruta</td><td>'+ruta+'</td></tr>    <tr><td class="dl">Colegios</td><td colspan="3">San José &nbsp;|&nbsp; Gabriela Mistral &nbsp;|&nbsp; Jorge Eliécer</td></tr>  </table>    <div class="p-section">Calendario — '+MESES[mesActual]+' '+anioActual+'</div>  '+cal+'    <div class="p-section">Resumen de Días</div>  <table class="p-res">    <tr>      <td class="rh">San José</td><td class="rv r-sj">'+r.sj+' días</td>      <td class="rh">Gabriela Mistral</td><td class="rv r-gm">'+r.gm+' días</td>      <td class="rh">Jorge Eliécer</td><td class="rv r-je">'+r.je+' días</td>      <td class="rh">Sin servicio</td><td class="rv r-ns">'+r.ns+' días</td>    </tr>    <tr><td class="rh" colspan="6">Total días con servicio</td><td class="rv r-tot" colspan="2">'+r.tot+' días</td></tr>  </table>    <div class="p-section">Control de Cobro</div>  <table class="p-cobro">    <tr><td class="cl">San José</td><td>'+r.sj+' días × '+fmt(tsj)+'</td><td class="cv">'+fmt(csj)+'</td></tr>    <tr><td class="cl">Gabriela Mistral</td><td>'+r.gm+' días × '+fmt(tgm)+'</td><td class="cv">'+fmt(cgm)+'</td></tr>    <tr><td class="cl">Jorge Eliécer</td><td>'+r.je+' días × '+fmt(tje)+'</td><td class="cv">'+fmt(cje)+'</td></tr>    <tr class="ctot"><td colspan="2">TOTAL A COBRAR — '+MESES[mesActual]+' '+anioActual+'</td><td>'+fmt(ctot)+'</td></tr>  </table>  '+(obs ? '<div class="p-section">Observaciones</div><p class="p-p">'+obs+'</p>' : '')+'    <div class="p-section">Firmas y Conformidad</div>  <p class="p-p">Las partes certifican que la información registrada en la presente planilla corresponde a los días de servicio efectivamente prestados durante el mes de <strong>'+MESES[mesActual]+' '+anioActual+'</strong>.</p>  <div class="p-firmas">    <div class="p-firma">      <div class="ft">CONDUCTOR</div>      <div class="fl"></div>      <div class="fd"><strong>'+conductor+'</strong><br>Conductor Ruta '+ruta+'</div>    </div>    <div class="p-firma">      <div class="ft">EMPRESA / AUTORIZA</div>      <div class="fl"></div>      <div class="fd">Nombre: ________________________<br>Cargo: _________________________</div>    </div>  </div>  <div class="p-footer">Planilla generada por COMERCIAL INTEGRAR SERVICES — Vehículo: '+vehiculo+' — Ruta: '+ruta+' — '+MESES[mesActual]+' '+anioActual+'</div>';
+
+  document.getElementById('doc-print').innerHTML = html;
+  setTimeout(function(){ window.print(); }, 200);
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+cargar();
+renderCalendario();
+actualizarResumen();
+</script>
+</body>
+</html>
